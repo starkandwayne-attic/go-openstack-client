@@ -1,0 +1,6 @@
+#!/bin/bash
+
+go get github.com/grd/stat
+go get github.com/longnguyen11288/optionparser
+go get github.com/gorilla/mux
+go get code.google.com/p/gopass

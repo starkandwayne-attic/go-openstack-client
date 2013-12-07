@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Found this script here:
+# https://groups.google.com/forum/#!topic/golang-nuts/4A367ib8m-4
+
+find . -name "*_test.go" | while read file
+do echo "$(dirname -- "$file")"
+done | sort -u | while read dir
+do
+	pushd "$dir"
+	go test -i
+	go test
+	popd
+done
