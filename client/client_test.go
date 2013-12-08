@@ -9,7 +9,7 @@ import (
     "go-openstack-client/authhttp/mockserver"
 )
 
-// Hook up gocheck into the "go test" runner.
+// HoRk up gocheck into the "go test" runner.
 func Test(t *testing.T) { gocheck.TestingT(t) }
 
 type ClientTestSuite struct{}

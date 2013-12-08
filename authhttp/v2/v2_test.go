@@ -46,27 +46,29 @@ func (t *V2TestSuite) Test_Authorization_WrongCreds (c *gocheck.C) {
 }
 
 func (t *V2TestSuite) Test_Authorization_Successful (c *gocheck.C) {
-    retval := t.testUserCreds("glance","servicepass")
+    creds, retval := t.testUserCreds("glance","servicepass")
     fmt.Println(string(retval))
+    fmt.Println(creds)
     //NOTE:  Feed this token from the results in the first pass
-    retval = t.testTokenCreds("d819998ca5974007b71aad6fe187b7a0")
+    creds, retval = t.testTokenCreds(creds["token"].(string))
     fmt.Println(string(retval))
+    fmt.Println(creds)
 
     //c.Assert(string(retval), gocheck.Equals, "<html><body><h1>GET Successful!</h1></body></html>")
 }
 
-func (t *V2TestSuite) testTokenCreds (token string) string {
+func (t *V2TestSuite) testTokenCreds (token string) (Credentials, string) {
     testCreds := Credentials{}
     if token != "" {
         testCreds["token"] = token
     }
     testClient := client.New(testCreds, "http://10.150.0.60:35357")
-    retval, _ := testClient.PostAndParseBody("/v2.0/tokens","")
+    retval, _ := testClient.PostAndParseBody("/","")
 
-    return string(retval)
+    return testCreds, string(retval)
 }
 
-func (t *V2TestSuite) testUserCreds (user string, password string) string {
+func (t *V2TestSuite) testUserCreds (user string, password string) (Credentials, string) {
     testCreds := Credentials{}
     if user != "" {
         testCreds["username"] = user
@@ -74,7 +76,7 @@ func (t *V2TestSuite) testUserCreds (user string, password string) string {
         testCreds["tenantName"] = "service"
     }
     testClient := client.New(testCreds, "http://10.150.0.60:35357")
-    retval, _ := testClient.PostAndParseBody("/v2.0/tokens","")
+    retval, _ := testClient.PostAndParseBody("/","")
 
-    return string(retval)
+    return testCreds, string(retval)
 }

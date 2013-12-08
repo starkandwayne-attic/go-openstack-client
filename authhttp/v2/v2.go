@@ -15,43 +15,75 @@ func name() string {
     return "V2"
 }
 
-type Credentials map[string]string
+type Credentials map[string]interface{}
+
+type JsonNode map[string]interface{}
 
 func (c Credentials) Name() string {
     return name()
 }
 
 func (c Credentials) SignRequest(request *http.Request) *http.Request {
-    credentialsMap := make(map[string]interface {})
-    authMap := make(map[string]interface{})
-    tokenMap := make(map[string]interface{})
-    userMap := make(map[string]interface{})
+    credentialsMap := JsonNode{}
+    authMap := JsonNode{}
+    tokenMap := JsonNode{}
+    userMap := JsonNode{}
 
     if len(request.Header["X-Auth-Token"]) == 0 {
         _, hasToken := c["token"]
-        if hasToken {
-            //Add token to the credentials map
-            tokenMap["id"] = interface{}(c["token"])
-            authMap["token"] = tokenMap
-            //Add authentication token header
-            request.Header.Add("X-Auth-Token", c["token"])
-        } else {
-            //Add username and password to the body
+        _, hasServiceCatalog := c["serviceCatalog"]
+        _, hasTenantId := c["tenantId"]
+        _, hasTenantName := c["tenantName"]
+        doPost := false
+
+        //If no Token was provided, we need to log in using a username and
+        //password
+        if hasToken == false {
             userMap["username"] =  c["username"]
             userMap["password"] = c["password"]
             authMap["passwordCredentials"] = userMap
+            doPost = true
         }
-        _, hasTenantId := c["tenantId"]
-        _, hasTenantName := c["tenantName"]
-        if hasTenantId {
-            authMap["tenantId"] = c["tenantId"]
-        } else if hasTenantName {
-            authMap["tenantName"] = c["tenantName"]
+        //If the Service Catalog has not been fetched, and we have been provided
+        //a Tenant, add it to the auth structure
+        if hasServiceCatalog == false &&
+            (hasTenantId || hasTenantName) {
+
+            if hasToken {
+                //Add token to the credentials map
+                tokenMap["id"] = interface{}(c["token"])
+                authMap["token"] = tokenMap
+            }
+            if hasTenantId {
+                authMap["tenantId"] = c["tenantId"]
+            } else if hasTenantName { 
+                authMap["tenantName"] = c["tenantName"]
+            }
+            doPost = true
         }
-        credentialsMap["auth"] = authMap
+        //Perform the POST only if there is information we need to fetch.
+        if doPost {
+            credentialsMap["auth"] = authMap
+            requestBody, _ := json.Marshal(credentialsMap)
+            buf := ioutil.NopCloser(bytes.NewBufferString(string(requestBody)))
+            resp, _ := http.Post("http://10.150.0.60:35357/v2.0/tokens", "application/json", buf)
+            responseBody, _ := ioutil.ReadAll(resp.Body)
+            authResponse := JsonNode{}
+            objectParser := JsonNode{}
+            _ = json.Unmarshal(responseBody,&authResponse)
+            objectParser = authResponse["access"].(map[string]interface{})
+            objectParser = objectParser["token"].(map[string]interface{})
+            c["token"] = objectParser["id"].(string)
+            fmt.Println(c["token"])
+            //fmt.Println(string(responseBody))
+            //Parse the resulting JSON
+            //Parse the Service Catalog and set in the credentials map
+        }
+        //Add the authentication header to the token
+        if hasToken {
+            request.Header.Add("X-Auth-Token", c["token"].(string))
+        }
     }
-    body, _ := json.Marshal(credentialsMap)
-    request.Body = ioutil.NopCloser(bytes.NewBufferString(string(body)))
     return request
 }
 
@@ -92,7 +124,7 @@ func (a Authenticator) AuthenticateRequest(request *http.Request) (bool, error) 
 }
 
 func (a Authenticator) ServeUnauthorizedHTTP(w http.ResponseWriter, request *http.Request, err error) {
-    w.Header().Set("WWW-Authenticate", "Basic")
+    w.Header().Set("WWW-Authenticate", "V2")
     w.WriteHeader(http.StatusUnauthorized)
     fmt.Fprintf(w, "<html><body><h1>" + err.Error() + "</h1></body></html>")
 }
