@@ -4,6 +4,7 @@ import (
     "fmt"
     "launchpad.net/gocheck"
     "testing"
+    "os"
     "go-openstack-client/authhttp/authenticator"
     "go-openstack-client/authhttp/client"
     "go-openstack-client/authhttp/none"
@@ -20,10 +21,15 @@ var _ = gocheck.Suite(&V2TestSuite{})
 
 func (t *V2TestSuite) SetUpSuite (c *gocheck.C) {
     authenticators := authenticator.Authenticators{}
+    // We use Authentication = none because we aren't writing the 
+    // authentication server.  We are only writing the client.
+    // Therefore, we only need the API server to simulate responses,
+    // not do actual authentication.
     authenticators.Add(none.Authenticator{},true)
 
     testServer := testserver.TestServer{}
-    go testServer.Start(authenticators, "8082", "/data/Projects/go/src/go-openstack-client/authhttp/v2/testfiles")
+    workingDir, _ := os.Getwd()
+    go testServer.Start(authenticators, "8082", workingDir + "/testfiles")
 }
 
 func (t *V2TestSuite) Test_Authorization_NoCreds (c *gocheck.C) {
