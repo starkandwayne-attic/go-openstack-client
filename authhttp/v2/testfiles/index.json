@@ -1,0 +1,2 @@
+[{"method": "POST", "path": "/", "file": "1.json"},
+ {"method": "POST", "path": "/v2.0/tokens", "file": "2.json"}]

@@ -6,7 +6,8 @@ import (
     "testing"
     "go-openstack-client/authhttp/authenticator"
     "go-openstack-client/authhttp/client"
-    "go-openstack-client/authhttp/mockserver"
+    "go-openstack-client/authhttp/none"
+    "go-openstack-client/testserver"
     "go-openstack-client/servicecatalog"
 )
 
@@ -19,10 +20,10 @@ var _ = gocheck.Suite(&V2TestSuite{})
 
 func (t *V2TestSuite) SetUpSuite (c *gocheck.C) {
     authenticators := authenticator.Authenticators{}
-    authenticators.Add(Authenticator{users: t.users},true)
+    authenticators.Add(none.Authenticator{},true)
 
-    mockServer := mockserver.Server{}
-    go mockServer.Start(authenticators, "8082")
+    testServer := testserver.TestServer{}
+    go testServer.Start(authenticators, "8082", "/data/Projects/go/src/go-openstack-client/authhttp/v2/testfiles")
 }
 
 func (t *V2TestSuite) Test_Authorization_NoCreds (c *gocheck.C) {
@@ -59,7 +60,7 @@ func (t *V2TestSuite) testTokenCreds (token string) (Credentials, string) {
     if token != "" {
         testCreds["token"] = token
     }
-    testClient := client.New(testCreds, "http://10.150.0.60:35357")
+    testClient := client.New(testCreds, "http://127.0.0.1:8082")
     retval, _ := testClient.PostAndParseBody("/","")
 
     return testCreds, string(retval)
@@ -72,7 +73,7 @@ func (t *V2TestSuite) testUserCreds (user string, password string) (Credentials,
         testCreds["password"] = password
         testCreds["tenantName"] = "service"
     }
-    testClient := client.New(testCreds, "http://10.150.0.60:35357")
+    testClient := client.New(testCreds, "http://127.0.0.1:8082")
     retval, _ := testClient.PostAndParseBody("/","")
 
     return testCreds, string(retval)

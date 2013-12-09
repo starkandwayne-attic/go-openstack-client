@@ -66,7 +66,7 @@ func (c Credentials) SignRequest(request *http.Request) *http.Request {
             credentialsMap["auth"] = authMap
             requestBody, _ := json.Marshal(credentialsMap)
             buf := ioutil.NopCloser(bytes.NewBufferString(string(requestBody)))
-            resp, _ := http.Post("http://10.150.0.60:35357/v2.0/tokens", "application/json", buf)
+            resp, _ := http.Post("http://" + request.URL.Host + "/v2.0/tokens", "application/json", buf)
             ar := authresponse.New(resp)
             c["token"] = ar.Token
             c["serviceCatalog"] = ar.ServiceCatalog
