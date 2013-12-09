@@ -68,9 +68,8 @@ func (c Credentials) SignRequest(request *http.Request) *http.Request {
             buf := ioutil.NopCloser(bytes.NewBufferString(string(requestBody)))
             resp, _ := http.Post("http://10.150.0.60:35357/v2.0/tokens", "application/json", buf)
             ar := authresponse.New(resp)
-            ar.ServiceCatalog.Show()
             c["token"] = ar.Token
-            //Parse the Service Catalog and set in the credentials map
+            c["serviceCatalog"] = ar.ServiceCatalog
         }
         //Add the authentication header to the token
         if hasToken {

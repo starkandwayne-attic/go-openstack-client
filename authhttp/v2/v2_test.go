@@ -7,6 +7,7 @@ import (
     "go-openstack-client/authhttp/authenticator"
     "go-openstack-client/authhttp/client"
     "go-openstack-client/authhttp/mockserver"
+    "go-openstack-client/servicecatalog"
 )
 
 // Hook up gocheck into the "go test" runner.
@@ -47,13 +48,15 @@ func (t *V2TestSuite) Test_Authorization_WrongCreds (c *gocheck.C) {
 
 func (t *V2TestSuite) Test_Authorization_Successful (c *gocheck.C) {
     creds, retval := t.testUserCreds("glance","servicepass")
+    endpointQuery := make(map[string]string)
+    endpointQuery["urltype"] = "public"
+    endpointQuery["servicename"] = "nova"
+    sc := creds["serviceCatalog"].(servicecatalog.ServiceCatalog)
     fmt.Println(string(retval))
-    fmt.Println(creds)
     //NOTE:  Feed this token from the results in the first pass
     creds, retval = t.testTokenCreds(creds["token"].(string))
     fmt.Println(string(retval))
-    fmt.Println(creds)
-
+    fmt.Println(sc.GetEndpoint(endpointQuery))
     //c.Assert(string(retval), gocheck.Equals, "<html><body><h1>GET Successful!</h1></body></html>")
 }
 
