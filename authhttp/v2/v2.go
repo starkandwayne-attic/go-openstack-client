@@ -9,6 +9,8 @@ import (
     "net/http"
     "strings"
     "go-openstack-client/authhttp"
+    "go-openstack-client/authresponse"
+    "go-openstack-client/util"
 )
 
 func name() string {
@@ -17,17 +19,15 @@ func name() string {
 
 type Credentials map[string]interface{}
 
-type JsonNode map[string]interface{}
-
 func (c Credentials) Name() string {
     return name()
 }
 
 func (c Credentials) SignRequest(request *http.Request) *http.Request {
-    credentialsMap := JsonNode{}
-    authMap := JsonNode{}
-    tokenMap := JsonNode{}
-    userMap := JsonNode{}
+    credentialsMap := util.JsonNode{}
+    authMap := util.JsonNode{}
+    tokenMap := util.JsonNode{}
+    userMap := util.JsonNode{}
 
     if len(request.Header["X-Auth-Token"]) == 0 {
         _, hasToken := c["token"]
@@ -56,7 +56,7 @@ func (c Credentials) SignRequest(request *http.Request) *http.Request {
             }
             if hasTenantId {
                 authMap["tenantId"] = c["tenantId"]
-            } else if hasTenantName { 
+            } else if hasTenantName {
                 authMap["tenantName"] = c["tenantName"]
             }
             doPost = true
@@ -67,16 +67,9 @@ func (c Credentials) SignRequest(request *http.Request) *http.Request {
             requestBody, _ := json.Marshal(credentialsMap)
             buf := ioutil.NopCloser(bytes.NewBufferString(string(requestBody)))
             resp, _ := http.Post("http://10.150.0.60:35357/v2.0/tokens", "application/json", buf)
-            responseBody, _ := ioutil.ReadAll(resp.Body)
-            authResponse := JsonNode{}
-            objectParser := JsonNode{}
-            _ = json.Unmarshal(responseBody,&authResponse)
-            objectParser = authResponse["access"].(map[string]interface{})
-            objectParser = objectParser["token"].(map[string]interface{})
-            c["token"] = objectParser["id"].(string)
-            fmt.Println(c["token"])
-            //fmt.Println(string(responseBody))
-            //Parse the resulting JSON
+            ar := authresponse.New(resp)
+            ar.ServiceCatalog.Show()
+            c["token"] = ar.Token
             //Parse the Service Catalog and set in the credentials map
         }
         //Add the authentication header to the token
