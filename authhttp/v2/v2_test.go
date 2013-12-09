@@ -15,12 +15,6 @@ func Test(t *testing.T) { gocheck.TestingT(t) }
 
 type V2TestSuite struct{}
 
-func (t *V2TestSuite) users() map[string]string {
-  users := make(map[string]string)
-  users["testuser"] = "dGVzdHVzZXI6cGlja2xlcw==" //password is "pickles"
-  return users
-}
-
 var _ = gocheck.Suite(&V2TestSuite{})
 
 func (t *V2TestSuite) SetUpSuite (c *gocheck.C) {
