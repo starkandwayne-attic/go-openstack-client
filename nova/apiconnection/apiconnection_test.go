@@ -31,9 +31,3 @@ func (t *ApiConnectionTestSuite) SetUpSuite (c *gocheck.C) {
     t.TestServer = testserver.New(authenticators, "", workingDir + "/testfiles")
     go t.TestServer.Start()
 }
-
-
-func (t *ApiConnectionTestSuite) Test_GetServerList (c *gocheck.C) {
-    n := New("http://127.0.0.1:" + t.TestServer.Port,"bosh","bosh","bosh")
-    n.PrintServerList()
-}

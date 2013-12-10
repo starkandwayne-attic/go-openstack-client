@@ -1,7 +1,7 @@
 package apiconnection
 
 import (
-    "fmt"
+    _"fmt"
     "io/ioutil"
     "go-openstack-client/authhttp/client"
     "go-openstack-client/authhttp/v2"
@@ -42,13 +42,10 @@ func (ac *ApiConnection) Connect() {
     ac.ApiConnectionUrl = sc.GetEndpoint(endpointQuery)
 
     ac.novaHttpClient = client.New(adminCreds, ac.ApiConnectionUrl)
-    res, _ := ac.novaHttpClient.Get("/servers")
-    body, _ := ioutil.ReadAll(res.Body)
-    fmt.Println(string(body))
 }
 
-func (ac *ApiConnection) PrintServerList() {
-    res, _ := ac.novaHttpClient.Get("/servers")
+func (ac *ApiConnection) Get(endpointURL string) string {
+    res, _ := ac.novaHttpClient.Get(endpointURL)
     body, _ := ioutil.ReadAll(res.Body)
-    fmt.Println(string(body))
+    return string(body)
 }
