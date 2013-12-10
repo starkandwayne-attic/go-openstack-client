@@ -1,8 +1,7 @@
-package nova
+package apiconnection
 
 import (
     _"fmt"
-    _"time"
     "os"
     "go-openstack-client/authhttp/authenticator"
     "go-openstack-client/authhttp/none"
@@ -14,11 +13,13 @@ import (
 // Hook up gocheck into the "go test" runner.
 func Test(t *testing.T) { gocheck.TestingT(t) }
 
-type NovaTestSuite struct{}
+type ApiConnectionTestSuite struct{
+    TestServer testserver.TestServer
+}
 
-var _ = gocheck.Suite(&NovaTestSuite{})
+var _ = gocheck.Suite(&ApiConnectionTestSuite{})
 
-func (t *NovaTestSuite) SetUpSuite (c *gocheck.C) {
+func (t *ApiConnectionTestSuite) SetUpSuite (c *gocheck.C) {
     authenticators := authenticator.Authenticators{}
     // We use Authentication = none because we aren't writing the 
     // authentication server.  We are only writing the client.
@@ -26,14 +27,13 @@ func (t *NovaTestSuite) SetUpSuite (c *gocheck.C) {
     // not do actual authentication.
     authenticators.Add(none.Authenticator{},true)
 
-    testServer := testserver.TestServer{}
     workingDir, _ := os.Getwd()
-    go testServer.Start(authenticators, "8083", workingDir + "/testfiles")
+    t.TestServer = testserver.New(authenticators, "", workingDir + "/testfiles")
+    go t.TestServer.Start()
 }
 
 
-func (t *NovaTestSuite) Test_Authorization_NoCreds (c *gocheck.C) {
-    //time.Sleep(30 * time.Second)
-    n := New("http://127.0.0.1:8083","bosh","bosh","bosh")
+func (t *ApiConnectionTestSuite) Test_GetServerList (c *gocheck.C) {
+    n := New("http://127.0.0.1:" + t.TestServer.Port,"bosh","bosh","bosh")
     n.PrintServerList()
 }

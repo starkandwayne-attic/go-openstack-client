@@ -1,9 +1,13 @@
 package testserver
 
 import (
-  "net/http"
   "fmt"
+  "math/rand"
+  "net"
+  "net/http"
   "io/ioutil"
+  "strconv"
+  "strings"
   "encoding/json"
   "go-openstack-client/authhttp/authenticator"
   "go-openstack-client/authhttp/handler"
@@ -13,6 +17,19 @@ import (
 type TestServer struct {
     index []map[string]string
     router *mux.Router
+    Port string
+}
+
+func New(a authenticator.Authenticators, port string, testFilePath string) TestServer{
+    ts := TestServer{}
+    ts.router = mux.NewRouter()
+    if port == "" {
+        ts.PickRandomLocalPort()
+    } else {
+        ts.Port = port
+    }
+    ts.LoadTestResponses(a,testFilePath)
+    return ts
 }
 
 func (t *TestServer) ServeHTTP(w http.ResponseWriter, request *http.Request) {
@@ -34,12 +51,24 @@ func (t *TestServer) ServeHTTP(w http.ResponseWriter, request *http.Request) {
     fmt.Fprintf(w, retval)
 }
 
-func (t *TestServer) Start(a authenticator.Authenticators, port string, testFilePath string) {
-    t.router = mux.NewRouter()
-    t.LoadTestResponses(a,testFilePath)
-    //router.HandleFunc("/", handler.New(a, t).ServeHTTP)
-    //http.Handle("/", router)
-    http.ListenAndServe(":" + port, nil)
+func (t *TestServer) Start() {
+    http.ListenAndServe(":" + t.Port, nil)
+}
+
+func (t *TestServer) PickRandomLocalPort() {
+    portIsOpen := false
+    portToTry := -1
+
+    for portIsOpen == false {
+        portToTry = rand.Intn(55535) + 1000
+        conn, err := net.Dial("tcp", "127.0.0.1:" + strconv.Itoa(portToTry))
+        if err != nil {
+            portIsOpen = true
+        } else {
+            conn.Close()
+        }
+    }
+    t.Port = strconv.Itoa(portToTry)
 }
 
 func (t *TestServer) LoadTestResponses(a authenticator.Authenticators, path string) {
@@ -49,7 +78,7 @@ func (t *TestServer) LoadTestResponses(a authenticator.Authenticators, path stri
 
     for _, resp := range index {
         contentFile, _ := ioutil.ReadFile(path + "/" + resp["file"])
-        resp["content"] = string(contentFile)
+        resp["content"] = strings.Replace(string(contentFile),"PORT_NUM",t.Port,-1)
         t.router.HandleFunc(resp["path"], handler.New(a, t).ServeHTTP)
         http.Handle(resp["path"], t.router)
     }
