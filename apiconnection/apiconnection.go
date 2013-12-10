@@ -45,8 +45,14 @@ func (ac *ApiConnection) Connect() {
     ac.novaHttpClient = client.New(adminCreds, ac.ApiConnectionUrl)
 }
 
-func (ac *ApiConnection) Get(endpointURL string) string {
+func (ac *ApiConnection) Get(endpointURL string) []byte {
     res, _ := ac.novaHttpClient.Get(endpointURL)
     body, _ := ioutil.ReadAll(res.Body)
-    return string(body)
+    return body
+}
+
+func (ac *ApiConnection) Post(endpointURL string, body string) []byte {
+    res, _ := ac.novaHttpClient.Post(endpointURL,body)
+    resBody, _ := ioutil.ReadAll(res.Body)
+    return resBody
 }

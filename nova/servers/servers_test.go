@@ -7,6 +7,8 @@ import (
     "go-openstack-client/authhttp/none"
     "go-openstack-client/apiconnection"
     "go-openstack-client/testserver"
+    "go-openstack-client/nova/images"
+    "go-openstack-client/nova/flavors"
     "launchpad.net/gocheck"
     "testing"
 )
@@ -38,4 +40,14 @@ func (t *ServersTestSuite) Test_List (c *gocheck.C) {
     apiConn := apiconnection.New("http://127.0.0.1:" + t.TestServer.Port,"nova","bosh","bosh","bosh")
     servers := New(apiConn)
     fmt.Println(string(servers.List()))
+}
+
+func (t *ServersTestSuite) Test_Create(c *gocheck.C) {
+    apiConn := apiconnection.New("http://10.150.0.60:35357","nova","bosh","bosh","bosh")
+    servers := New(apiConn)
+    images := images.New(apiConn)
+    flavors := flavors.New(apiConn)
+    options := make(map[string]interface{})
+
+    servers.Create("jrbTestServer2",images.List()[0],flavors.List()[1],options)
 }

@@ -1,19 +1,19 @@
-package nova
+package cinder
 
 import (
-    "go-openstack-client/nova/apiconnection"
-    "go-openstack-client/nova/servers"
+    "go-openstack-client/apiconnection"
+    "go-openstack-client/cinder/volumes"
 )
 
 type Nova struct {
     ApiConnection apiconnection.ApiConnection
-    Servers servers.Servers
+    Volumes volumes.Volumes
 }
 
 func New(adminurl string, username string, password string, tenantname string) {
-    n := Nova{}
-    n.ApiConnection = apiconnection.New(adminurl,username,password,tenantname)
-    n.Servers = servers.New(n.ApiConnection)
+    v := Volumes{}
+    v.ApiConnection = apiconnection.New(adminurl,username,password,tenantname)
+    v.Volumes = volumes.New(n.ApiConnection)
     return n
 }
 
