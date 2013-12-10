@@ -17,10 +17,11 @@ type ApiConnection struct {
 
     ApiConnectionUrl string
     novaHttpClient client.Client
+    ServiceName string
 }
 
-func New(adminurl string, username string, password string, tenantname string) ApiConnection {
-    ac := ApiConnection{AdminUrl: adminurl, Username: username, Password: password, TenantName: tenantname}
+func New(adminurl string, servicename string, username string, password string, tenantname string) ApiConnection {
+    ac := ApiConnection{AdminUrl: adminurl, ServiceName: servicename, Username: username, Password: password, TenantName: tenantname}
     ac.Connect()
     return ac
 }
@@ -33,7 +34,7 @@ func (ac *ApiConnection) Connect() {
 
     endpointQuery := make(map[string]string)
     endpointQuery["urltype"] = "public"
-    endpointQuery["servicename"] = "nova"
+    endpointQuery["name"] = ac.ServiceName
 
     ac.authHttpClient = client.New(adminCreds, ac.AdminUrl)
     ac.authHttpClient.Get("/")

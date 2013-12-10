@@ -1,7 +1,7 @@
 package nova
 
 import (
-    "go-openstack-client/apiconnection"
+    "go-openstack-client/nova/apiconnection"
     "go-openstack-client/nova/servers"
 )
 

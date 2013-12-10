@@ -2,10 +2,6 @@ package servicecatalog
 
 import (
     _"fmt"
-    //"encoding/json"
-    //"io/ioutil"
-    //"net/http"
-    //"go-openstack-client/util"
 )
 
 type ServiceCatalog struct {
@@ -28,20 +24,19 @@ func (sc *ServiceCatalog) GetEndpoint(queryParameters map[string]string) string 
         return ""
     }
     urlType = urlType + "URL"
-    for _, svc := range sc.serviceArray {
-        svcMap := svc.(map[string]interface{})
+    for i := range sc.serviceArray {
+        svcMap := sc.serviceArray[i].(map[string]interface{})
         endpoints := svcMap["endpoints"].([]interface{})
-        for _, edp := range endpoints {
-            meetsAll := true
-            edpMap := edp.(map[string]interface{})
-            for k,v := range queryParameters {
-                _, keyExists := edpMap[k]
-                if keyExists && edpMap[k] != v {
-                    meetsAll = false
-                    break
-                }
+        meetsAll := true
+        for k, v := range queryParameters {
+            _, keyExists := svcMap[k]
+            if keyExists && svcMap[k] != v {
+                meetsAll = false
             }
-            if meetsAll {
+        }
+        if meetsAll {
+            for _, edp := range endpoints {
+                edpMap := edp.(map[string]interface{})
                 return edpMap[urlType].(string)
             }
         }

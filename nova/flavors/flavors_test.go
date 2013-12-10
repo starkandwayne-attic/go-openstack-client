@@ -1,4 +1,4 @@
-package servers
+package flavors
 
 import (
     "fmt"
@@ -14,13 +14,13 @@ import (
 // Hook up gocheck into the "go test" runner.
 func Test(t *testing.T) { gocheck.TestingT(t) }
 
-type ServersTestSuite struct{
+type FlavorsTestSuite struct{
     TestServer testserver.TestServer
 }
 
-var _ = gocheck.Suite(&ServersTestSuite{})
+var _ = gocheck.Suite(&FlavorsTestSuite{})
 
-func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
+func (t *FlavorsTestSuite) SetUpSuite (c *gocheck.C) {
     authenticators := authenticator.Authenticators{}
     // We use Authentication = none because we aren't writing the 
     // authentication server.  We are only writing the client.
@@ -34,8 +34,9 @@ func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
 }
 
 
-func (t *ServersTestSuite) Test_List (c *gocheck.C) {
-    apiConn := apiconnection.New("http://127.0.0.1:" + t.TestServer.Port,"nova","bosh","bosh","bosh")
-    servers := New(apiConn)
-    fmt.Println(string(servers.List()))
+func (t *FlavorsTestSuite) Test_List (c *gocheck.C) {
+    //apiConn := apiconnection.New("http://127.0.0.1:" + t.TestServer.Port,"bosh","bosh","bosh")
+    apiConn := apiconnection.New("http://10.150.0.60:35357","nova","bosh","bosh","bosh")
+    flavors := New(apiConn)
+    fmt.Println(flavors.List())
 }

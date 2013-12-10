@@ -2,7 +2,7 @@ package servers
 
 import (
     _"fmt"
-    "go-openstack-client/nova/apiconnection"
+    "go-openstack-client/apiconnection"
 )
 
 type Servers struct {
