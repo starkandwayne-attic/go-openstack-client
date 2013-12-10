@@ -14,6 +14,6 @@ func New(apiConnection apiconnection.ApiConnection) Servers {
     return servers
 }
 
-func (s *Servers) GetServerList() string {
+func (s *Servers) List() string {
     return s.apiConnection.Get("/servers")
 }

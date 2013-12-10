@@ -37,5 +37,5 @@ func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
 func (t *ServersTestSuite) Test_GetServerList (c *gocheck.C) {
     apiConn := apiconnection.New("http://127.0.0.1:" + t.TestServer.Port,"bosh","bosh","bosh")
     servers := New(apiConn)
-    servers.GetServerList()
+    servers.List()
 }
