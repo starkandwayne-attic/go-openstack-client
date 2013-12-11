@@ -21,7 +21,9 @@ func (s *Images) List() []Image {
     imageList := make([]Image,0)
     for _, v := range images["images"].([]interface{}) {
         image := v.(map[string]interface{})
-        newImage := Image{Id: image["id"].(string), Name: image["name"].(string), Links: image["links"].([]interface{})}
+        newImage := Image{Id: image["id"].(string),
+                          Name: image["name"].(string),
+                          Links: image["links"].([]interface{})}
         imageList = append(imageList,newImage)
     }
     return imageList

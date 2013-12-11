@@ -26,3 +26,11 @@ func New(adminurl string, username string, password string, tenantname string) {
 //n.Servers.List()
 //options := make(map[string]interface{})
 //n.Servers.Create("jrbTestServer",n.Images.List()[0],n.Flavors.List()[1],options)
+
+//Check Status
+//Create Cinder Volume
+//Delete/Deprovision
+
+//BONUS POINTS:
+//Upload files
+//Run remote command
