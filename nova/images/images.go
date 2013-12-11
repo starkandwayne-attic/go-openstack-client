@@ -16,17 +16,12 @@ func New(apiConnection apiconnection.ApiConnection) Images {
 }
 
 func (s *Images) List() []Image {
-    images := make(map[string]interface{})
-    json.Unmarshal(s.apiConnection.Get("/images"), &images)
-    imageList := make([]Image,0)
-    for _, v := range images["images"].([]interface{}) {
-        image := v.(map[string]interface{})
-        newImage := Image{Id: image["id"].(string),
-                          Name: image["name"].(string),
-                          Links: image["links"].([]interface{})}
-        imageList = append(imageList,newImage)
+    type ImagesNode struct {
+        Images []Image `json:"images"`
     }
-    return imageList
+    images := ImagesNode{}
+    json.Unmarshal(s.apiConnection.Get("/images"), &images)
+    return images.Images
 }
 
 type Image struct {

@@ -3,7 +3,6 @@ package volumes
 import (
     _"fmt"
     "encoding/json"
-    "strconv"
     "go-openstack-client/apiconnection"
 )
 
@@ -40,43 +39,12 @@ func New(apiConnection apiconnection.ApiConnection) Volumes {
 }
 
 func (vol *Volumes) List() []Volume {
-    volumes := make(map[string]interface{})
-    json.Unmarshal(vol.apiConnection.Get("/volumes"), &volumes)
-    volumeList := make([]Volume,0)
-    for _, v := range volumes["volumes"].([]interface{}) {
-        volume := v.(map[string]interface{})
-        attachmentList := make([]Attachment,0)
-        _, hasAttachments := volume["attachments"]
-        if hasAttachments {
-            attachments := volume["attachments"].([]interface{})
-            for _, a := range attachments {
-                attachment := a.(map[string]interface{})
-                newAttachment := Attachment{Id: attachment["id"].(string),
-                                            VolumeId: attachment["volume_id"].(string),
-                                            ServerId: attachment["server_id"].(string),
-                                            Device: attachment["device"].(string),
-                }
-                attachmentList = append(attachmentList,newAttachment)
-            }
-        }
-        bootable, _ := strconv.ParseBool(volume["bootable"].(string))
-        newVolume := Volume{Id: volume["id"].(string),
-                            DisplayName: volume["display_name"].(string),
-                            SizeInGB: volume["size"].(float64),
-                            Status: volume["status"].(string),
-                            Attachments: attachmentList,
-                            AvailabilityZone: volume["availability_zone"].(string),
-                            Bootable: bootable,
-                            CreatedAt: volume["created_at"].(string),
-                            DisplayDescription: volume["display_description"].(string),
-                            //VolumeType: volume["volume_type"].(string),
-                            //SnapshotId: volume["snapshot_id"].(string),
-                            //SourceVolId: volume["source_volid"].(string),
-                            Metadata: volume["metadata"].(interface{}),
-        }
-        volumeList = append(volumeList,newVolume)
+    type VolumesNode struct {
+        Volumes []Volume `json:"volumes"`
     }
-    return volumeList
+    volumes := VolumesNode{}
+    json.Unmarshal(vol.apiConnection.Get("/volumes"), &volumes)
+    return volumes.Volumes
 }
 
 func (vol *Volumes) Create(name string, sizeInGB float64, options map[string]interface{}) {
