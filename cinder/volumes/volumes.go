@@ -79,16 +79,15 @@ func (vol *Volumes) List() []Volume {
     return volumeList
 }
 
-//func (vol *Volumes) Create(name string, image images.Image, flavor flavors.Flavor, options map[string]interface{}) {
-    //createRequest := make(map[string]interface{})
-    //serverRequest := make(map[string]interface{})
+func (vol *Volumes) Create(name string, sizeInGB float64, options map[string]interface{}) {
+    createRequest := make(map[string]interface{})
+    volumeRequest := make(map[string]interface{})
 
-    //serverRequest["name"] = name
-    //serverRequest["imageRef"] = image.Id
-    //serverRequest["flavorRef"] = flavor.Id
+    volumeRequest["name"] = name
+    volumeRequest["size"] = sizeInGB
 
-    //createRequest["server"] = serverRequest
+    createRequest["volume"] = volumeRequest
 
-    //req, _ := json.Marshal(createRequest)
-    //s.apiConnection.Post("/servers",string(req))
-//}
+    req, _ := json.Marshal(createRequest)
+    vol.apiConnection.Post("/volumes",string(req))
+}
