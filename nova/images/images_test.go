@@ -35,8 +35,8 @@ func (t *ImagesTestSuite) SetUpSuite (c *gocheck.C) {
 
 
 func (t *ImagesTestSuite) Test_List (c *gocheck.C) {
-    //apiConn := apiconnection.New("http://127.0.0.1:" + t.TestServer.Port,"bosh","bosh","bosh")
-    apiConn := apiconnection.New("http://10.150.0.60:35357","nova","bosh","bosh","bosh")
+    host := "http://127.0.0.1:" + t.TestServer.Port //http://10.150.0.60:35357
+    apiConn := apiconnection.New(host,"nova","bosh","bosh","bosh")
     images := New(apiConn)
     fmt.Println(images.List())
 }

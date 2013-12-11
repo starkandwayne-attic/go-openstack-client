@@ -15,7 +15,9 @@ import (
 // Hook up gocheck into the "go test" runner.
 func Test(t *testing.T) { gocheck.TestingT(t) }
 
-type V2TestSuite struct{}
+type V2TestSuite struct{
+    TestServer testserver.TestServer
+}
 
 var _ = gocheck.Suite(&V2TestSuite{})
 
@@ -27,9 +29,9 @@ func (t *V2TestSuite) SetUpSuite (c *gocheck.C) {
     // not do actual authentication.
     authenticators.Add(none.Authenticator{},true)
 
-    testServer := testserver.TestServer{}
     workingDir, _ := os.Getwd()
-    go testServer.Start(authenticators, "8082", workingDir + "/testfiles")
+    t.TestServer = testserver.New(authenticators, "", workingDir + "/testfiles")
+    go t.TestServer.Start()
 }
 
 func (t *V2TestSuite) Test_Authorization_NoCreds (c *gocheck.C) {
@@ -66,7 +68,7 @@ func (t *V2TestSuite) testTokenCreds (token string) (Credentials, string) {
     if token != "" {
         testCreds["token"] = token
     }
-    testClient := client.New(testCreds, "http://127.0.0.1:8082")
+    testClient := client.New(testCreds, "http://127.0.0.1:" + t.TestServer.Port)
     retval, _ := testClient.PostAndParseBody("/","")
 
     return testCreds, string(retval)
@@ -79,7 +81,7 @@ func (t *V2TestSuite) testUserCreds (user string, password string) (Credentials,
         testCreds["password"] = password
         testCreds["tenantName"] = "service"
     }
-    testClient := client.New(testCreds, "http://127.0.0.1:8082")
+    testClient := client.New(testCreds, "http://127.0.0.1:" + t.TestServer.Port)
     retval, _ := testClient.PostAndParseBody("/","")
 
     return testCreds, string(retval)

@@ -3,25 +3,29 @@ package client
 import (
     _"fmt"
     "launchpad.net/gocheck"
+    "os"
     "testing"
-    "go-openstack-client/authhttp/authenticator"
+    "go-openstack-client/testserver"
     "go-openstack-client/authhttp/mockauthentication"
-    "go-openstack-client/authhttp/mockserver"
+    "go-openstack-client/authhttp/authenticator"
 )
 
 // Hook up gocheck into the "go test" runner.
 func Test(t *testing.T) { gocheck.TestingT(t) }
 
-type ClientTestSuite struct{}
+type ClientTestSuite struct{
+    TestServer testserver.TestServer
+}
 
 var _ = gocheck.Suite(&ClientTestSuite{})
 
 func (t *ClientTestSuite) SetUpSuite (c *gocheck.C) {
-    authorizers := authenticator.Authenticators{}
-    authorizers.Add(mockauthentication.Authenticator{},true)
+    authenticators := authenticator.Authenticators{}
+    authenticators.Add(mockauthentication.Authenticator{},true)
 
-    mockServer := mockserver.Server{}
-    go mockServer.Start(authorizers, "8083")
+    workingDir, _ := os.Getwd()
+    t.TestServer = testserver.New(authenticators, "", workingDir + "/testfiles")
+    go t.TestServer.Start()
 }
 
 func (t *ClientTestSuite) Test_GetAndParseBody_NoCreds (c *gocheck.C) {
@@ -50,9 +54,9 @@ func (t *ClientTestSuite) Test_PostAndParseBody_WithCreds (c *gocheck.C) {
 
 func (t *ClientTestSuite) prepareClientWithCreds() Client {
     creds := mockauthentication.Credentials{"user": "Jeremy", "password": "PicklesRGR8"}
-    return New(creds, "http://localhost:8083")
+    return New(creds, "http://localhost:" + t.TestServer.Port)
 }
 
 func (t *ClientTestSuite) prepareClientNoCreds() Client {
-    return New(mockauthentication.Credentials{}, "http://localhost:8083")
+    return New(mockauthentication.Credentials{}, "http://localhost:" + t.TestServer.Port)
 }

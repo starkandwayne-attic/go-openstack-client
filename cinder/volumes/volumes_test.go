@@ -43,8 +43,8 @@ func (t *VolumesTestSuite) Test_List (c *gocheck.C) {
 }
 
 func (t *VolumesTestSuite) Test_Create (c *gocheck.C) {
-    //apiConn := apiconnection.New("http://10.150.0.60:35357","volume","bosh","bosh","bosh")
-    //volumes := New(apiConn)
-    //options := make(map[string]interface{})
-    //volumes.Create("jrbNewVolume",float64(20),options)
+    apiConn := apiconnection.New("http://10.150.0.60:35357","volume","bosh","bosh","bosh")
+    volumes := New(apiConn)
+    options := make(map[string]interface{})
+    volumes.Create("jrbNewVolume",float64(20),options)
 }

@@ -37,17 +37,13 @@ func (t *TestServer) ServeHTTP(w http.ResponseWriter, request *http.Request) {
     queryParameters["method"] = request.Method
     queryParameters["path"] = request.URL.Path
 
+    body, _ := ioutil.ReadAll(request.Body)
+    request.Body.Close()
+
+    queryParameters["body"] = string(body)
+
     retval := t.GetContent(queryParameters)
 
-    //retval := "<html><body><h1>" + request.Method + " Successful!</h1>"
-
-    //body, _ := ioutil.ReadAll(request.Body)
-    //request.Body.Close()
-
-    //if string(body) != "" {
-    //    retval = retval + "<h2>" + string(body) + "</h2>"
-    //}
-    //retval = retval + "</body></html>"
     fmt.Fprintf(w, retval)
 }
 
@@ -74,13 +70,18 @@ func (t *TestServer) PickRandomLocalPort() {
 func (t *TestServer) LoadTestResponses(a authenticator.Authenticators, path string) {
     indexFile, _ := ioutil.ReadFile(path + "/index.json")
     var index []map[string]string
+    registeredEndpoints := make(map[string]string)
     json.Unmarshal(indexFile,&index)
 
     for _, resp := range index {
         contentFile, _ := ioutil.ReadFile(path + "/" + resp["file"])
-        resp["content"] = strings.Replace(string(contentFile),"PORT_NUM",t.Port,-1)
-        t.router.HandleFunc(resp["path"], handler.New(a, t).ServeHTTP)
-        http.Handle(resp["path"], t.router)
+        resp["content"] = strings.Replace(strings.TrimRight(string(contentFile),"\n"),"PORT_NUM",t.Port,-1)
+        _, isRegistered := registeredEndpoints[resp["path"]]
+        if isRegistered == false {
+            t.router.HandleFunc(resp["path"], handler.New(a, t).ServeHTTP)
+            http.Handle(resp["path"], t.router)
+            registeredEndpoints[resp["path"]] = resp["path"]
+        }
     }
     t.index = index
 }
@@ -100,7 +101,12 @@ func (t *TestServer) GetContent(queryParameters map[string]string) string {
             }
         }
         if meetsAll {
-            return respMap["content"]
+            _, hasBody := queryParameters["body"]
+            if hasBody {
+                return strings.Replace(string(respMap["content"]),"POSTED_BODY",queryParameters["body"],-1)
+            } else {
+                return respMap["content"]
+            }
         }
     }
     return ""
