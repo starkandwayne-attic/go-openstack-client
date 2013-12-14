@@ -5,16 +5,16 @@ import (
     "go-openstack-client/cinder/volumes"
 )
 
-type Nova struct {
+type Cinder struct {
     ApiConnection apiconnection.ApiConnection
     Volumes volumes.Volumes
 }
 
-func New(adminurl string, username string, password string, tenantname string) {
-    v := Volumes{}
-    v.ApiConnection = apiconnection.New(adminurl,username,password,tenantname)
-    v.Volumes = volumes.New(n.ApiConnection)
-    return n
+func New(adminurl string, username string, password string, tenantname string) Cinder {
+    c := Cinder{}
+    c.ApiConnection = apiconnection.New(adminurl,"volume",username,password,tenantname)
+    c.Volumes = volumes.New(c.ApiConnection)
+    return c
 }
 
 

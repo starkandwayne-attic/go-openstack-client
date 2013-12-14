@@ -37,17 +37,24 @@ func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
 
 
 func (t *ServersTestSuite) Test_List (c *gocheck.C) {
-    apiConn := apiconnection.New("http://127.0.0.1:" + t.TestServer.Port,"nova","bosh","bosh","bosh")
+    apiConn := apiconnection.New("http://10.150.0.60:35357","nova","bosh","bosh","bosh")
     servers := New(apiConn)
-    fmt.Println(string(servers.List()))
+    fmt.Println(servers.List())
 }
 
-func (t *ServersTestSuite) Test_Create(c *gocheck.C) {
+func (t *ServersTestSuite) Test_Get (c *gocheck.C) {
+    apiConn := apiconnection.New("http://10.150.0.60:35357","nova","bosh","bosh","bosh")
+    servers := New(apiConn)
+    s := servers.Get("c4c1630b-de71-44b2-aea4-e52067e149fb")
+    fmt.Println(s)
+}
+
+func (t *ServersTestSuite) xTest_Create(c *gocheck.C) {
     apiConn := apiconnection.New("http://10.150.0.60:35357","nova","bosh","bosh","bosh")
     servers := New(apiConn)
     images := images.New(apiConn)
     flavors := flavors.New(apiConn)
     options := make(map[string]interface{})
 
-    servers.Create("jrbTestServer2",images.List()[0],flavors.List()[1],options)
+    servers.Create("jrbTestServer",images.List()[0],flavors.List()[1],options)
 }

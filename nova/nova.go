@@ -14,15 +14,17 @@ type Nova struct {
     Servers servers.Servers
 }
 
-func New(adminurl string, username string, password string, tenantname string) {
+func New(adminurl string, username string, password string, tenantname string) Nova {
     n := Nova{}
-    n.ApiConnection = apiconnection.New(adminurl,username,password,tenantname)
+    n.ApiConnection = apiconnection.New(adminurl,"nova",username,password,tenantname)
+    n.Images = images.New(n.ApiConnection)
+    n.Flavors = flavors.New(n.ApiConnection)
     n.Servers = servers.New(n.ApiConnection)
     return n
 }
 
 //Example:
-//n := nova.New("http://10.150.0.10:35357","boshuser","boshpw","bosh")
+//n := nova.New("http://10.150.0.60:35357","bosh","bosh","bosh")
 //n.Servers.List()
 //options := make(map[string]interface{})
 //n.Servers.Create("jrbTestServer",n.Images.List()[0],n.Flavors.List()[1],options)

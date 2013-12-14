@@ -34,7 +34,7 @@ func (t *VolumesTestSuite) SetUpSuite (c *gocheck.C) {
 }
 
 
-func (t *VolumesTestSuite) Test_List (c *gocheck.C) {
+func (t *VolumesTestSuite) xTest_List (c *gocheck.C) {
     //apiConn := apiconnection.New("http://127.0.0.1:" + t.TestServer.Port,"bosh","bosh","bosh")
     apiConn := apiconnection.New("http://10.150.0.60:35357","volume","bosh","bosh","bosh")
     volumes := New(apiConn)
@@ -42,9 +42,19 @@ func (t *VolumesTestSuite) Test_List (c *gocheck.C) {
     fmt.Println(volumeList)
 }
 
+func (t *VolumesTestSuite) xTest_Get (c *gocheck.C) {
+    apiConn := apiconnection.New("http://10.150.0.60:35357","volume","bosh","bosh","bosh")
+    volumes := New(apiConn)
+    v := volumes.Get("56bd7e8b-eee3-4624-a31d-e0f22e3eabf0")
+    fmt.Println(v)
+}
+
+
 func (t *VolumesTestSuite) Test_Create (c *gocheck.C) {
     apiConn := apiconnection.New("http://10.150.0.60:35357","volume","bosh","bosh","bosh")
     volumes := New(apiConn)
     options := make(map[string]interface{})
-    volumes.Create("jrbNewVolume",float64(20),options)
+    v := volumes.Create("jrbNewVolume",float64(20),options)
+    fmt.Println(v)
+    fmt.Println(v.Id)
 }

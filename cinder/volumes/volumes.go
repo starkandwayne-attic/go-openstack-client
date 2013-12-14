@@ -1,7 +1,7 @@
 package volumes
 
 import (
-    _"fmt"
+    "fmt"
     "encoding/json"
     "go-openstack-client/apiconnection"
 )
@@ -12,17 +12,17 @@ type Volumes struct {
 
 type Volume struct {
     Id string
-    DisplayName string
-    SizeInGB float64
+    DisplayName string `json:"display_name"`
+    SizeInGB float64 `json:"size"`
     Status string
     Attachments []Attachment
-    AvailabilityZone string
+    AvailabilityZone string `json:"availability_zone"`
     Bootable bool
-    CreatedAt string
+    CreatedAt string `json:"created_at"`
     DisplayDescription string
-    VolumeType string
-    SnapshotId string
-    SourceVolId string
+    VolumeType string `json:"volume_type"`
+    SnapshotId string `json:"snapshot_id"`
+    SourceVolId string `json:"source_volid"`
     Metadata interface{}
 }
 
@@ -47,7 +47,16 @@ func (vol *Volumes) List() []Volume {
     return volumes.Volumes
 }
 
-func (vol *Volumes) Create(name string, sizeInGB float64, options map[string]interface{}) {
+func (s *Volumes) Get(id string) Volume {
+    type VolumeNode struct {
+        Volume Volume `json:"volume"`
+    }
+    volume := VolumeNode{}
+    json.Unmarshal(s.apiConnection.Get("/volumes/" + id), &volume)
+    return volume.Volume
+}
+
+func (vol *Volumes) Create(name string, sizeInGB float64, options map[string]interface{}) Volume {
     createRequest := make(map[string]interface{})
     volumeRequest := make(map[string]interface{})
 
@@ -56,6 +65,32 @@ func (vol *Volumes) Create(name string, sizeInGB float64, options map[string]int
 
     createRequest["volume"] = volumeRequest
 
+    type VolumeNode struct {
+        Volume Volume `json:"volume"`
+    }
+    volume := VolumeNode{}
+
     req, _ := json.Marshal(createRequest)
-    vol.apiConnection.Post("/volumes",string(req))
+    json.Unmarshal(vol.apiConnection.Post("/volumes",string(req)), &volume)
+    return volume.Volume
+}
+
+func (vol *Volumes) Attach(volumeId string, instanceId string, mountPoint string, options map[string]interface{}) {
+    action := make(map[string]interface{})
+    attachAction := make(map[string]interface{})
+
+    mode := "rw"
+    _, hasMode := options["mode"]
+    if hasMode {
+        mode = options["mode"].(string)
+    }
+
+    attachAction["instance_uuid"] = instanceId
+    attachAction["mountpoint"] = mountPoint
+    attachAction["mode"] = mode
+
+    action["os-attach"] = attachAction
+
+    req, _ := json.Marshal(action)
+    fmt.Println(string(vol.apiConnection.Post("/volumes/" + volumeId + "/action",string(req))))
 }

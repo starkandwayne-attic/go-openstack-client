@@ -1,11 +1,12 @@
 package servers
 
 import (
-    _"fmt"
+    "fmt"
     "encoding/json"
     "go-openstack-client/apiconnection"
     "go-openstack-client/nova/flavors"
     "go-openstack-client/nova/images"
+    "go-openstack-client/cinder/volumes"
 )
 
 type Servers struct {
@@ -17,11 +18,25 @@ func New(apiConnection apiconnection.ApiConnection) Servers {
     return servers
 }
 
-func (s *Servers) List() string {
-    return string(s.apiConnection.Get("/servers"))
+func (s *Servers) List() []Server {
+    type ServersNode struct {
+        Servers []Server `json:"servers"`
+    }
+    servers := ServersNode{}
+    json.Unmarshal(s.apiConnection.Get("/servers/detail"), &servers)
+    return servers.Servers
 }
 
-func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor, options map[string]interface{}) {
+func (s *Servers) Get(id string) Server {
+    type ServerNode struct {
+        Server Server `json:"server"`
+    }
+    server := ServerNode{}
+    json.Unmarshal(s.apiConnection.Get("/servers/" + id), &server)
+    return server.Server
+}
+
+func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor, options map[string]interface{}) Server {
     createRequest := make(map[string]interface{})
     serverRequest := make(map[string]interface{})
 
@@ -31,6 +46,64 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
 
     createRequest["server"] = serverRequest
 
+    type ServerNode struct {
+        Server Server `json:"server"`
+    }
+    server := ServerNode{}
     req, _ := json.Marshal(createRequest)
-    s.apiConnection.Post("/servers",string(req))
+    json.Unmarshal(s.apiConnection.Post("/servers",string(req)),&server)
+    return server.Server
+}
+
+func (s *Servers) AttachVolume(server Server, volume volumes.Volume) {
+    attachRequest := make(map[string]interface{})
+    volumeAttachment := make(map[string]interface{})
+
+    volumeAttachment["volumeId"] = volume.Id
+    volumeAttachment["device"] = "/dev/vdb"
+    attachRequest["volumeAttachment"] = volumeAttachment
+    req, _ := json.Marshal(attachRequest)
+    fmt.Println(string(s.apiConnection.Post("/servers/" + server.Id + "/os-volume-attachments",string(req))))
+}
+
+type Server struct {
+    Id string
+    Name string
+    Created string
+    Status string
+    Updated string
+    HostId string
+    Addresses map[string][]Address
+    Links []Link
+    KeyName string `json:"key_name"`
+    Image images.Image
+    TaskState string `json:"OS-EXT-STS:task_state"`
+    VMState string `json:"OS-EXT-STS:vm_state"`
+    Flavor flavors.Flavor
+    SecurityGroups []SecurityGroup `json:"security_groups"`
+    AvailabilityZone string `json:"OS-EXT-AZ:availability_zone"`
+    UserID string `json:"user_id"`
+    TenantID string `json:"tenant_id"`
+    DiskConfig string `json:"OS-DCF:diskConfig"`
+    AccessIPV4 string
+    AccessIPV6 string
+    Progress int
+    PowerState int `json:"OS-EXT-STS:power_state"`
+    ConfigDrive string `json:"config_drive"`
+    Metadata map[string]string
+}
+
+type Address struct {
+    Version int
+    Addr string
+    Type string `json:"OS-EXT-IPS:type"`
+}
+
+type Link struct {
+    Href string
+    Rel string
+}
+
+type SecurityGroup struct {
+    Name string
 }
