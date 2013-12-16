@@ -36,13 +36,13 @@ func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
 }
 
 
-func (t *ServersTestSuite) Test_List (c *gocheck.C) {
+func (t *ServersTestSuite) xTest_List (c *gocheck.C) {
     apiConn := apiconnection.New("http://10.150.0.60:35357","nova","bosh","bosh","bosh")
     servers := New(apiConn)
     fmt.Println(servers.List())
 }
 
-func (t *ServersTestSuite) Test_Get (c *gocheck.C) {
+func (t *ServersTestSuite) xTest_Get (c *gocheck.C) {
     apiConn := apiconnection.New("http://10.150.0.60:35357","nova","bosh","bosh","bosh")
     servers := New(apiConn)
     s := servers.Get("c4c1630b-de71-44b2-aea4-e52067e149fb")
@@ -57,4 +57,10 @@ func (t *ServersTestSuite) xTest_Create(c *gocheck.C) {
     options := make(map[string]interface{})
 
     servers.Create("jrbTestServer",images.List()[0],flavors.List()[1],options)
+}
+
+func (t *ServersTestSuite) Test_Delete(c *gocheck.C) {
+    apiConn := apiconnection.New("http://10.150.0.60:35357","nova","bosh","bosh","bosh")
+    servers := New(apiConn)
+    servers.Delete("5366d597-9229-4fd7-8fb9-5aa3cbf365f6")
 }

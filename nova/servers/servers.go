@@ -6,7 +6,6 @@ import (
     "go-openstack-client/apiconnection"
     "go-openstack-client/nova/flavors"
     "go-openstack-client/nova/images"
-    "go-openstack-client/cinder/volumes"
 )
 
 type Servers struct {
@@ -53,6 +52,10 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
     req, _ := json.Marshal(createRequest)
     json.Unmarshal(s.apiConnection.Post("/servers",string(req)),&server)
     return server.Server
+}
+
+func (s *Servers) Delete(id string) {
+    fmt.Println(s.apiConnection.Delete("/servers/" + id))
 }
 
 type Server struct {
