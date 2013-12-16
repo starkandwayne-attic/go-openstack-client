@@ -94,3 +94,15 @@ func (vol *Volumes) Attach(volumeId string, instanceId string, mountPoint string
     req, _ := json.Marshal(action)
     fmt.Println(string(vol.apiConnection.Post("/volumes/" + volumeId + "/action",string(req))))
 }
+
+func (vol *Volumes) Detach(volumeId string) {
+    action := make(map[string]interface{})
+    action["os-detach"] = nil
+
+    req, _ := json.Marshal(action)
+    fmt.Println(string(vol.apiConnection.Post("/volumes/" + volumeId + "/action",string(req))))
+}
+
+func (vol *Volumes) Delete(volumeId string) {
+    fmt.Println(string(vol.apiConnection.Delete("/volumes/" + volumeId )))
+}

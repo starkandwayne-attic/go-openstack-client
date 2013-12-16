@@ -91,6 +91,29 @@ func (c Client) Post(uri string, body string) (*http.Response, error) {
     return resp, nil
 }
 
+func (c Client) Delete (uri string) (*http.Response, error) {
+    client := &http.Client{}
+
+    fullURL := c.url + uri
+
+    req, err := http.NewRequest("DELETE", fullURL, nil)
+    if err != nil {
+        return nil, err
+    }
+    req.Header.Add("Date", authentication.GetCurrentGMTTime())
+    req.Header.Add("Content-Type", GetContentType())
+    req.Header.Add("rack.input", "")
+
+    req = c.credentials.SignRequest(req)
+    client = c.credentials.SignClient(client)
+
+    resp, err := client.Do(req)
+    if err != nil {
+        return nil, err
+    }
+    return resp, nil
+}
+
 //Returns Content Type
 func GetContentType() string {
     return "application/json"

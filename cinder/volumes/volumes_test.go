@@ -50,11 +50,23 @@ func (t *VolumesTestSuite) xTest_Get (c *gocheck.C) {
 }
 
 
-func (t *VolumesTestSuite) Test_Create (c *gocheck.C) {
+func (t *VolumesTestSuite) xTest_Create (c *gocheck.C) {
     apiConn := apiconnection.New("http://10.150.0.60:35357","volume","bosh","bosh","bosh")
     volumes := New(apiConn)
     options := make(map[string]interface{})
     v := volumes.Create("jrbNewVolume",float64(20),options)
     fmt.Println(v)
     fmt.Println(v.Id)
+}
+
+func (t *VolumesTestSuite) xTest_Detach (c *gocheck.C) {
+    apiConn := apiconnection.New("http://10.150.0.60:35357","volume","bosh","bosh","bosh")
+    volumes := New(apiConn)
+    volumes.Detach("bc342444-9f0f-495d-b711-bf96b55bf57d")
+}
+
+func (t *VolumesTestSuite) Test_Delete (c *gocheck.C) {
+    apiConn := apiconnection.New("http://10.150.0.60:35357","volume","bosh","bosh","bosh")
+    volumes := New(apiConn)
+    volumes.Delete("48ffcb93-3b47-4b3e-817a-8ba80174b11c")
 }

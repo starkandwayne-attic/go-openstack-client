@@ -47,12 +47,18 @@ func (ac *ApiConnection) Connect() {
 
 func (ac *ApiConnection) Get(endpointURL string) []byte {
     res, _ := ac.novaHttpClient.Get(endpointURL)
-    body, _ := ioutil.ReadAll(res.Body)
-    return body
+    resBody, _ := ioutil.ReadAll(res.Body)
+    return resBody
 }
 
 func (ac *ApiConnection) Post(endpointURL string, body string) []byte {
     res, _ := ac.novaHttpClient.Post(endpointURL,body)
+    resBody, _ := ioutil.ReadAll(res.Body)
+    return resBody
+}
+
+func (ac *ApiConnection) Delete(endpointURL string) []byte {
+    res, _ := ac.novaHttpClient.Delete(endpointURL)
     resBody, _ := ioutil.ReadAll(res.Body)
     return resBody
 }

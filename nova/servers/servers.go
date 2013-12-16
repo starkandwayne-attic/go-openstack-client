@@ -55,17 +55,6 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
     return server.Server
 }
 
-func (s *Servers) AttachVolume(server Server, volume volumes.Volume) {
-    attachRequest := make(map[string]interface{})
-    volumeAttachment := make(map[string]interface{})
-
-    volumeAttachment["volumeId"] = volume.Id
-    volumeAttachment["device"] = "/dev/vdb"
-    attachRequest["volumeAttachment"] = volumeAttachment
-    req, _ := json.Marshal(attachRequest)
-    fmt.Println(string(s.apiConnection.Post("/servers/" + server.Id + "/os-volume-attachments",string(req))))
-}
-
 type Server struct {
     Id string
     Name string
