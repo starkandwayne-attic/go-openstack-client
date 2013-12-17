@@ -19,7 +19,7 @@ type ServersTestSuite struct{
 var _ = gocheck.Suite(&ServersTestSuite{})
 
 func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
-    t.ApiTestHarness = apitestharness.New("nova", false)
+    t.ApiTestHarness = apitestharness.New("compute", false)
 }
 
 
@@ -43,7 +43,7 @@ func (t *ServersTestSuite) xTest_Create(c *gocheck.C) {
     servers.Create("jrbTestServer",images.List()[0],flavors.List()[1],options)
 }
 
-func (t *ServersTestSuite) Test_Delete(c *gocheck.C) {
+func (t *ServersTestSuite) xTest_Delete(c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
     servers.Delete("b998f8cf-5688-4afc-86c6-8d1c457514ab")
 }

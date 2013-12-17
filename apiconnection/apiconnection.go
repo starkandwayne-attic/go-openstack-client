@@ -34,7 +34,7 @@ func (ac *ApiConnection) Connect() {
 
     endpointQuery := make(map[string]string)
     endpointQuery["urltype"] = "public"
-    endpointQuery["name"] = ac.ServiceName
+    endpointQuery["type"] = ac.ServiceName
 
     ac.authHttpClient = client.New(adminCreds, ac.AdminUrl)
     ac.authHttpClient.Get("/")

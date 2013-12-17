@@ -17,7 +17,7 @@ type FlavorsTestSuite struct{
 var _ = gocheck.Suite(&FlavorsTestSuite{})
 
 func (t *FlavorsTestSuite) SetUpSuite (c *gocheck.C) {
-    t.ApiTestHarness = apitestharness.New("nova", false)
+    t.ApiTestHarness = apitestharness.New("compute", false)
 }
 
 func (t *FlavorsTestSuite) Test_List (c *gocheck.C) {

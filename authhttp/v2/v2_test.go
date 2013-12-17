@@ -53,7 +53,7 @@ func (t *V2TestSuite) Test_Authorization_Successful (c *gocheck.C) {
     creds, retval := t.testUserCreds("glance","servicepass")
     endpointQuery := make(map[string]string)
     endpointQuery["urltype"] = "public"
-    endpointQuery["servicename"] = "nova"
+    endpointQuery["servicename"] = "compute"
     sc := creds["serviceCatalog"].(servicecatalog.ServiceCatalog)
     fmt.Println(string(retval))
     //NOTE:  Feed this token from the results in the first pass

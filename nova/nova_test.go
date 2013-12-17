@@ -19,7 +19,7 @@ type ServersTestSuite struct{
 var _ = gocheck.Suite(&ServersTestSuite{})
 
 func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
-    t.NovaApiTestHarness = apitestharness.New("nova", false)
+    t.NovaApiTestHarness = apitestharness.New("compute", false)
     t.CinderApiTestHarness = apitestharness.New("volume", false)
 }
 

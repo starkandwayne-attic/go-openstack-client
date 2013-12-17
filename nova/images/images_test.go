@@ -17,7 +17,7 @@ type ImagesTestSuite struct{
 var _ = gocheck.Suite(&ImagesTestSuite{})
 
 func (t *ImagesTestSuite) SetUpSuite (c *gocheck.C) {
-    t.ApiTestHarness = apitestharness.New("nova", false)
+    t.ApiTestHarness = apitestharness.New("compute", false)
 }
 
 

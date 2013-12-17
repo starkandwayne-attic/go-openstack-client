@@ -16,7 +16,7 @@ type Nova struct {
 
 func New(adminurl string, username string, password string, tenantname string) Nova {
     n := Nova{}
-    n.ApiConnection = apiconnection.New(adminurl,"nova",username,password,tenantname)
+    n.ApiConnection = apiconnection.New(adminurl,"compute",username,password,tenantname)
     n.Images = images.New(n.ApiConnection)
     n.Flavors = flavors.New(n.ApiConnection)
     n.Servers = servers.New(n.ApiConnection)
