@@ -2,11 +2,8 @@ package nova
 
 import (
     "fmt"
-    "os"
-    "go_openstack_client/authhttp/authenticator"
-    "go_openstack_client/authhttp/none"
-    "go_openstack_client/testserver"
-    "go_openstack_client/cinder"
+    "git.smf.sh/jrbudnack/go_openstack_client/apitestharness"
+    "git.smf.sh/jrbudnack/go_openstack_client/cinder"
     "launchpad.net/gocheck"
     "testing"
 )
@@ -15,29 +12,27 @@ import (
 func Test(t *testing.T) { gocheck.TestingT(t) }
 
 type ServersTestSuite struct{
-    TestServer testserver.TestServer
+    NovaApiTestHarness apitestharness.ApiTestHarness
+    CinderApiTestHarness apitestharness.ApiTestHarness
 }
 
 var _ = gocheck.Suite(&ServersTestSuite{})
 
 func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
-    authenticators := authenticator.Authenticators{}
-    // We use Authentication = none because we aren't writing the 
-    // authentication server.  We are only writing the client.
-    // Therefore, we only need the API server to simulate responses,
-    // not do actual authentication.
-    authenticators.Add(none.Authenticator{},true)
-
-    workingDir, _ := os.Getwd()
-    t.TestServer = testserver.New(authenticators, "", workingDir + "/testfiles")
-    go t.TestServer.Start()
+    t.NovaApiTestHarness = apitestharness.New("nova", false)
+    t.CinderApiTestHarness = apitestharness.New("volume", false)
 }
 
 func (t *ServersTestSuite) Test_CreateAFreakingServer (c *gocheck.C) {
     fmt.Println("Creating volume...")
-    n := New("http://172.17.74.3:5000","cf_test3","cf_test3","cf_test3")
-    cdr := cinder.New("http://172.17.74.5000","cf_test3","cf_test3","cf_test3")
-
+    n := New(t.NovaApiTestHarness.Url,
+             t.NovaApiTestHarness.Username,
+             t.NovaApiTestHarness.Password,
+             t.NovaApiTestHarness.Tenant)
+    cdr := cinder.New(t.CinderApiTestHarness.Url,
+                      t.CinderApiTestHarness.Username,
+                      t.CinderApiTestHarness.Password,
+                      t.CinderApiTestHarness.Tenant)
     fmt.Println("Volume has been created.  Creating server...")
     volumeOptions := make(map[string]interface{})
     v := cdr.Volumes.Create("jrbNewVolume",float64(20),volumeOptions)

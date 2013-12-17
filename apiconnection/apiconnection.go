@@ -3,9 +3,9 @@ package apiconnection
 import (
     _"fmt"
     "io/ioutil"
-    "go_openstack_client/authhttp/client"
-    "go_openstack_client/authhttp/v2"
-    "go_openstack_client/servicecatalog"
+    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/client"
+    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/v2"
+    "git.smf.sh/jrbudnack/go_openstack_client/servicecatalog"
 )
 
 type ApiConnection struct {

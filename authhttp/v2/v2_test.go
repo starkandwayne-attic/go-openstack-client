@@ -5,11 +5,11 @@ import (
     "launchpad.net/gocheck"
     "testing"
     "os"
-    "go_openstack_client/authhttp/authenticator"
-    "go_openstack_client/authhttp/client"
-    "go_openstack_client/authhttp/none"
-    "go_openstack_client/testserver"
-    "go_openstack_client/servicecatalog"
+    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/authenticator"
+    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/client"
+    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/none"
+    "git.smf.sh/jrbudnack/go_openstack_client/testserver"
+    "git.smf.sh/jrbudnack/go_openstack_client/servicecatalog"
 )
 
 // Hook up gocheck into the "go test" runner.

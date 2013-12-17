@@ -3,9 +3,9 @@ package apiconnection
 import (
     _"fmt"
     "os"
-    "go_openstack_client/authhttp/authenticator"
-    "go_openstack_client/authhttp/none"
-    "go_openstack_client/testserver"
+    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/authenticator"
+    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/none"
+    "git.smf.sh/jrbudnack/go_openstack_client/testserver"
     "launchpad.net/gocheck"
     "testing"
 )

@@ -3,7 +3,7 @@ package flavors
 import (
     _"fmt"
     "encoding/json"
-    "go_openstack_client/apiconnection"
+    "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
 )
 
 type Flavors struct {

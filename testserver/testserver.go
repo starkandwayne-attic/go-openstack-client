@@ -9,8 +9,8 @@ import (
   "strconv"
   "strings"
   "encoding/json"
-  "go_openstack_client/authhttp/authenticator"
-  "go_openstack_client/authhttp/handler"
+  "git.smf.sh/jrbudnack/go_openstack_client/authhttp/authenticator"
+  "git.smf.sh/jrbudnack/go_openstack_client/authhttp/handler"
   "github.com/gorilla/mux"
 )
 

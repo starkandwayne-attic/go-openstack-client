@@ -2,9 +2,9 @@ package servers
 
 import (
     "fmt"
-    "go_openstack_client/apitestharness"
-    "go_openstack_client/nova/images"
-    "go_openstack_client/nova/flavors"
+    "git.smf.sh/jrbudnack/go_openstack_client/apitestharness"
+    "git.smf.sh/jrbudnack/go_openstack_client/nova/images"
+    "git.smf.sh/jrbudnack/go_openstack_client/nova/flavors"
     "launchpad.net/gocheck"
     "testing"
 )

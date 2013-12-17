@@ -5,7 +5,7 @@ import (
     "launchpad.net/gocheck"
     "testing"
     "net/http"
-    "go_openstack_client/authhttp/mockauthentication"
+    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/mockauthentication"
 )
 
 // Hook up gocheck into the "go test" runner.

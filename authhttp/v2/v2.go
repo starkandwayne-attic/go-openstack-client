@@ -8,9 +8,9 @@ import (
     "io/ioutil"
     "net/http"
     "strings"
-    "go_openstack_client/authhttp"
-    "go_openstack_client/authresponse"
-    "go_openstack_client/util"
+    "git.smf.sh/jrbudnack/go_openstack_client/authhttp"
+    "git.smf.sh/jrbudnack/go_openstack_client/authresponse"
+    "git.smf.sh/jrbudnack/go_openstack_client/util"
 )
 
 func name() string {
