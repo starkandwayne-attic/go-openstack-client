@@ -3,6 +3,7 @@ package flavors
 import (
     _"fmt"
     "encoding/json"
+    "errors"
     "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
 )
 
@@ -22,6 +23,16 @@ func (s *Flavors) List() []Flavor {
     flavors := FlavorsNode{}
     json.Unmarshal(s.apiConnection.Get("/flavors"), &flavors)
     return flavors.Flavors
+}
+
+func (s *Flavors) GetByName(name string) (Flavor, error) {
+    flavors := s.List()
+    for _, flavor := range flavors {
+        if flavor.Name == name {
+            return flavor, nil
+        }
+    }
+    return Flavor{}, errors.New("Flavor not found.")
 }
 
 type Flavor struct {

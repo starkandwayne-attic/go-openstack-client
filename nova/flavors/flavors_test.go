@@ -24,3 +24,8 @@ func (t *FlavorsTestSuite) Test_List (c *gocheck.C) {
     flavors := New(t.ApiTestHarness.ApiConnection)
     fmt.Println(flavors.List())
 }
+
+func (t *FlavorsTestSuite) Test_GetByName (c *gocheck.C) {
+    flavors := New(t.ApiTestHarness.ApiConnection)
+    fmt.Println(flavors.GetByName("m1.tiny"))
+}
