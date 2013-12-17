@@ -3,9 +3,9 @@ package apiconnection
 import (
     _"fmt"
     "io/ioutil"
-    "go-openstack-client/authhttp/client"
-    "go-openstack-client/authhttp/v2"
-    "go-openstack-client/servicecatalog"
+    "go_openstack_client/authhttp/client"
+    "go_openstack_client/authhttp/v2"
+    "go_openstack_client/servicecatalog"
 )
 
 type ApiConnection struct {
@@ -40,6 +40,7 @@ func (ac *ApiConnection) Connect() {
     ac.authHttpClient.Get("/")
 
     sc := adminCreds["serviceCatalog"].(servicecatalog.ServiceCatalog)
+    //fmt.Println(sc)
     ac.ApiConnectionUrl = sc.GetEndpoint(endpointQuery)
 
     ac.novaHttpClient = client.New(adminCreds, ac.ApiConnectionUrl)

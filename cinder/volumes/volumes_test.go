@@ -3,10 +3,10 @@ package volumes
 import (
     "fmt"
     "os"
-    "go-openstack-client/authhttp/authenticator"
-    "go-openstack-client/authhttp/none"
-    "go-openstack-client/apiconnection"
-    "go-openstack-client/testserver"
+    "go_openstack_client/authhttp/authenticator"
+    "go_openstack_client/authhttp/none"
+    "go_openstack_client/apiconnection"
+    "go_openstack_client/testserver"
     "launchpad.net/gocheck"
     "testing"
 )

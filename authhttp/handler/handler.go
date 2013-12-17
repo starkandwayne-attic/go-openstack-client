@@ -2,7 +2,7 @@ package handler
 
 import (
   _"fmt"
-  "go-openstack-client/authhttp/authenticator"
+  "go_openstack_client/authhttp/authenticator"
   "net/http"
 )
 

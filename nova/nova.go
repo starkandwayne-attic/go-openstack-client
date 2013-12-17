@@ -1,10 +1,10 @@
 package nova
 
 import (
-    "go-openstack-client/apiconnection"
-    "go-openstack-client/nova/images"
-    "go-openstack-client/nova/flavors"
-    "go-openstack-client/nova/servers"
+    "go_openstack_client/apiconnection"
+    "go_openstack_client/nova/images"
+    "go_openstack_client/nova/flavors"
+    "go_openstack_client/nova/servers"
 )
 
 type Nova struct {

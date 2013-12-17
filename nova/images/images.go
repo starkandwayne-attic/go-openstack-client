@@ -3,7 +3,7 @@ package images
 import (
     _"fmt"
     "encoding/json"
-    "go-openstack-client/apiconnection"
+    "go_openstack_client/apiconnection"
 )
 
 type Images struct {

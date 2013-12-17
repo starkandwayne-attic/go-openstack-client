@@ -2,11 +2,7 @@ package images
 
 import (
     "fmt"
-    "os"
-    "go-openstack-client/authhttp/authenticator"
-    "go-openstack-client/authhttp/none"
-    "go-openstack-client/apiconnection"
-    "go-openstack-client/testserver"
+    "go_openstack_client/apitestharness"
     "launchpad.net/gocheck"
     "testing"
 )
@@ -15,28 +11,17 @@ import (
 func Test(t *testing.T) { gocheck.TestingT(t) }
 
 type ImagesTestSuite struct{
-    TestServer testserver.TestServer
+    ApiTestHarness apitestharness.ApiTestHarness
 }
 
 var _ = gocheck.Suite(&ImagesTestSuite{})
 
 func (t *ImagesTestSuite) SetUpSuite (c *gocheck.C) {
-    authenticators := authenticator.Authenticators{}
-    // We use Authentication = none because we aren't writing the 
-    // authentication server.  We are only writing the client.
-    // Therefore, we only need the API server to simulate responses,
-    // not do actual authentication.
-    authenticators.Add(none.Authenticator{},true)
-
-    workingDir, _ := os.Getwd()
-    t.TestServer = testserver.New(authenticators, "", workingDir + "/testfiles")
-    go t.TestServer.Start()
+    t.ApiTestHarness = apitestharness.New("nova", false)
 }
 
 
 func (t *ImagesTestSuite) Test_List (c *gocheck.C) {
-    host := "http://127.0.0.1:" + t.TestServer.Port //http://10.150.0.60:35357
-    apiConn := apiconnection.New(host,"nova","bosh","bosh","bosh")
-    images := New(apiConn)
+    images := New(t.ApiTestHarness.ApiConnection)
     fmt.Println(images.List())
 }

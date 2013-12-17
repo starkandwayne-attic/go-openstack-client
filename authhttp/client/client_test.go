@@ -5,9 +5,9 @@ import (
     "launchpad.net/gocheck"
     "os"
     "testing"
-    "go-openstack-client/testserver"
-    "go-openstack-client/authhttp/mockauthentication"
-    "go-openstack-client/authhttp/authenticator"
+    "go_openstack_client/testserver"
+    "go_openstack_client/authhttp/mockauthentication"
+    "go_openstack_client/authhttp/authenticator"
 )
 
 // Hook up gocheck into the "go test" runner.

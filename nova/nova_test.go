@@ -3,10 +3,10 @@ package nova
 import (
     "fmt"
     "os"
-    "go-openstack-client/authhttp/authenticator"
-    "go-openstack-client/authhttp/none"
-    "go-openstack-client/testserver"
-    "go-openstack-client/cinder"
+    "go_openstack_client/authhttp/authenticator"
+    "go_openstack_client/authhttp/none"
+    "go_openstack_client/testserver"
+    "go_openstack_client/cinder"
     "launchpad.net/gocheck"
     "testing"
 )
@@ -35,8 +35,8 @@ func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
 
 func (t *ServersTestSuite) Test_CreateAFreakingServer (c *gocheck.C) {
     fmt.Println("Creating volume...")
-    n := New("http://10.150.0.60:35357","bosh","bosh","bosh")
-    cdr := cinder.New("http://10.150.0.60:35357","bosh","bosh","bosh")
+    n := New("http://172.17.74.3:5000","cf_test3","cf_test3","cf_test3")
+    cdr := cinder.New("http://172.17.74.5000","cf_test3","cf_test3","cf_test3")
 
     fmt.Println("Volume has been created.  Creating server...")
     volumeOptions := make(map[string]interface{})

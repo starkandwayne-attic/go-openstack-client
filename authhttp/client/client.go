@@ -5,8 +5,8 @@ import (
     _"fmt"
     "io/ioutil"
     "net/http"
-    "go-openstack-client/authhttp"
-    "go-openstack-client/authhttp/credentials"
+    "go_openstack_client/authhttp"
+    "go_openstack_client/authhttp/credentials"
 )
 
 type Client struct {

@@ -8,9 +8,9 @@ import (
     "io/ioutil"
     "net/http"
     "strings"
-    "go-openstack-client/authhttp"
-    "go-openstack-client/authresponse"
-    "go-openstack-client/util"
+    "go_openstack_client/authhttp"
+    "go_openstack_client/authresponse"
+    "go_openstack_client/util"
 )
 
 func name() string {

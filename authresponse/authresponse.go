@@ -5,8 +5,8 @@ import (
     "encoding/json"
     "io/ioutil"
     "net/http"
-    "go-openstack-client/servicecatalog"
-    "go-openstack-client/util"
+    "go_openstack_client/servicecatalog"
+    "go_openstack_client/util"
 )
 
 type AuthResponse struct {
