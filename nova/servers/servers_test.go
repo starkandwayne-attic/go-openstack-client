@@ -23,22 +23,23 @@ func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
 }
 
 
-func (t *ServersTestSuite) Test_List (c *gocheck.C) {
+func (t *ServersTestSuite) xTest_List (c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
     fmt.Println(servers.List())
 }
 
-func (t *ServersTestSuite) Test_Get (c *gocheck.C) {
+func (t *ServersTestSuite) xTest_Get (c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
     s := servers.Get("c4c1630b-de71-44b2-aea4-e52067e149fb")
     fmt.Println(s)
 }
 
-func (t *ServersTestSuite) xTest_Create(c *gocheck.C) {
+func (t *ServersTestSuite) Test_Create(c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
     images := images.New(t.ApiTestHarness.ApiConnection)
     flavors := flavors.New(t.ApiTestHarness.ApiConnection)
     options := make(map[string]interface{})
+    options["keyname"] = "bosh"
 
     servers.Create("jrbTestServer",images.List()[0],flavors.List()[1],options)
 }

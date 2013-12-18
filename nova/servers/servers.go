@@ -43,6 +43,12 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
     serverRequest["imageRef"] = image.Id
     serverRequest["flavorRef"] = flavor.Id
 
+    _, hasKeyName := options["keyname"]
+
+    if hasKeyName {
+        serverRequest["key_name"] = options["keyname"]
+    }
+
     createRequest["server"] = serverRequest
 
     type ServerNode struct {
