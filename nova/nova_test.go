@@ -40,7 +40,9 @@ func (t *ServersTestSuite) Test_CreateAFreakingServer (c *gocheck.C) {
         v = cdr.Volumes.Get(v.Id)
     }
     serverOptions := make(map[string]interface{})
-    s := n.Servers.Create("jrbTestServer",n.Images.List()[0],n.Flavors.List()[1],serverOptions)
+    serverOptions["keyname"] = "bosh"
+    sourceImage, _ := n.Images.GetByName("BOSH-a7430ae2-e573-412b-8c5d-6d1571cb064a")
+    s := n.Servers.Create("jrbTestServer",sourceImage,n.Flavors.List()[1],serverOptions)
     for s.Status != "ACTIVE" && s.Status != "ERROR" {
         s = n.Servers.Get(s.Id)
     }
