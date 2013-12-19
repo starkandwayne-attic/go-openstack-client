@@ -30,8 +30,9 @@ func (t *ServersTestSuite) xTest_List (c *gocheck.C) {
 
 func (t *ServersTestSuite) xTest_Get (c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
-    s := servers.Get("c4c1630b-de71-44b2-aea4-e52067e149fb")
-    fmt.Println(s)
+    s := servers.Get("187ac9ba-0aef-4eee-a18f-1f20acbaeb4e")
+    //fmt.Println(s)
+    fmt.Println(s.Addresses["demonet2"][0].Addr)
 }
 
 func (t *ServersTestSuite) Test_Create(c *gocheck.C) {
@@ -40,8 +41,11 @@ func (t *ServersTestSuite) Test_Create(c *gocheck.C) {
     flavors := flavors.New(t.ApiTestHarness.ApiConnection)
     options := make(map[string]interface{})
     options["keyname"] = "bosh"
-
-    servers.Create("jrbTestServer",images.List()[0],flavors.List()[1],options)
+    options["userdata"] =
+`#!/bin/bash
+echo "cloud-user    ALL=(ALL)   NOPASSWD: ALL" >> /etc/sudoers`
+    serverImage, _ := images.GetByName("centos")
+    servers.Create("jrbTestServer",serverImage,flavors.List()[1],options)
 }
 
 func (t *ServersTestSuite) xTest_Delete(c *gocheck.C) {

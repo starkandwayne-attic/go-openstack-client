@@ -2,6 +2,7 @@ package servers
 
 import (
     "fmt"
+    "encoding/base64"
     "encoding/json"
     "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
     "git.smf.sh/jrbudnack/go_openstack_client/nova/flavors"
@@ -49,6 +50,13 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
         serverRequest["key_name"] = options["keyname"]
     }
 
+    _, hasUserData := options["userdata"]
+
+    if hasUserData {
+        encodedUserData := base64.StdEncoding.EncodeToString([]byte(options["userdata"].(string)))
+        serverRequest["user_data"] = encodedUserData
+    }
+
     createRequest["server"] = serverRequest
 
     type ServerNode struct {
@@ -56,6 +64,7 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
     }
     server := ServerNode{}
     req, _ := json.Marshal(createRequest)
+    fmt.Println(string(req))
     json.Unmarshal(s.apiConnection.Post("/servers",string(req)),&server)
     return server.Server
 }

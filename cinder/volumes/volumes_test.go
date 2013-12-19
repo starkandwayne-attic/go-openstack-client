@@ -21,7 +21,7 @@ func (t *VolumesTestSuite) SetUpSuite (c *gocheck.C) {
 }
 
 
-func (t *VolumesTestSuite) Test_List (c *gocheck.C) {
+func (t *VolumesTestSuite) xTest_List (c *gocheck.C) {
     volumes := New(t.ApiTestHarness.ApiConnection)
     volumeList := volumes.List()
     fmt.Println(volumeList)
@@ -44,7 +44,7 @@ func (t *VolumesTestSuite) xTest_Create (c *gocheck.C) {
 
 func (t *VolumesTestSuite) Test_Detach (c *gocheck.C) {
     volumes := New(t.ApiTestHarness.ApiConnection)
-    volumes.Detach("31869dae-7b2d-4df7-9865-8674950d6a98")
+    volumes.Detach("303152e4-14f7-47c0-8485-8efd421f055d")
 }
 
 func (t *VolumesTestSuite) xTest_Delete (c *gocheck.C) {
