@@ -57,6 +57,12 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
         serverRequest["user_data"] = encodedUserData
     }
 
+    _, hasNetworks := options["networks"]
+
+    if hasNetworks {
+        serverRequest["networks"] = options["networks"]
+    }
+
     createRequest["server"] = serverRequest
 
     type ServerNode struct {
