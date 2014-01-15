@@ -44,7 +44,7 @@ func (t *VolumesTestSuite) xTest_Create (c *gocheck.C) {
 
 func (t *VolumesTestSuite) Test_Detach (c *gocheck.C) {
     volumes := New(t.ApiTestHarness.ApiConnection)
-    volumes.Detach("303152e4-14f7-47c0-8485-8efd421f055d")
+    volumes.Detach("")
 }
 
 func (t *VolumesTestSuite) xTest_Delete (c *gocheck.C) {

@@ -41,7 +41,7 @@ func (t *ServersTestSuite) Test_CreateAFreakingServer (c *gocheck.C) {
     }
     serverOptions := make(map[string]interface{})
     serverOptions["keyname"] = "bosh"
-    sourceImage, _ := n.Images.GetByName("BOSH-a7430ae2-e573-412b-8c5d-6d1571cb064a")
+    sourceImage, _ := n.Images.GetByName("centos")
     s := n.Servers.Create("jrbTestServer",sourceImage,n.Flavors.List()[1],serverOptions)
     for s.Status != "ACTIVE" && s.Status != "ERROR" {
         s = n.Servers.Get(s.Id)

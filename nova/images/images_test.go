@@ -28,5 +28,5 @@ func (t *ImagesTestSuite) Test_List (c *gocheck.C) {
 
 func (t *ImagesTestSuite) Test_GetByName (c *gocheck.C) {
     images := New(t.ApiTestHarness.ApiConnection)
-    fmt.Println(images.GetByName("f17-jeos"))
+    fmt.Println(images.GetByName("centos"))
 }
