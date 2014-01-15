@@ -1,7 +1,7 @@
 package servers
 
 import (
-    "fmt"
+    _"fmt"
     "encoding/base64"
     "encoding/json"
     "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
@@ -18,25 +18,33 @@ func New(apiConnection apiconnection.ApiConnection) Servers {
     return servers
 }
 
-func (s *Servers) List() []Server {
+func (s *Servers) List() ([]Server, error) {
     type ServersNode struct {
         Servers []Server `json:"servers"`
     }
     servers := ServersNode{}
-    json.Unmarshal(s.apiConnection.Get("/servers/detail"), &servers)
-    return servers.Servers
+    res, err := s.apiConnection.Get("/servers/detail")
+    if err != nil {
+        return make([]Server,0), err
+    }
+    json.Unmarshal(res, &servers)
+    return servers.Servers, nil
 }
 
-func (s *Servers) Get(id string) Server {
+func (s *Servers) Get(id string) (Server, error) {
     type ServerNode struct {
         Server Server `json:"server"`
     }
     server := ServerNode{}
-    json.Unmarshal(s.apiConnection.Get("/servers/" + id), &server)
-    return server.Server
+    res, err := s.apiConnection.Get("/servers/" + id)
+    if err != nil {
+        return Server{}, err
+    }
+    json.Unmarshal(res, &server)
+    return server.Server, nil
 }
 
-func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor, options map[string]interface{}) Server {
+func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor, options map[string]interface{}) (Server, error) {
     createRequest := make(map[string]interface{})
     serverRequest := make(map[string]interface{})
 
@@ -70,13 +78,18 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
     }
     server := ServerNode{}
     req, _ := json.Marshal(createRequest)
-    fmt.Println(string(req))
-    json.Unmarshal(s.apiConnection.Post("/servers",string(req)),&server)
-    return server.Server
+    res, err := s.apiConnection.Post("/servers", string(req))
+    if err != nil {
+        return Server{}, err
+    }
+
+    json.Unmarshal(res, &server)
+    return server.Server, nil
 }
 
-func (s *Servers) Delete(id string) {
-    fmt.Println(s.apiConnection.Delete("/servers/" + id))
+func (s *Servers) Delete(id string) (error) {
+    _, err := s.apiConnection.Delete("/servers/" + id)
+    return err
 }
 
 type Server struct {

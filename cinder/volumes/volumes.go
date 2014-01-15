@@ -1,7 +1,7 @@
 package volumes
 
 import (
-    "fmt"
+    _"fmt"
     "encoding/json"
     "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
 )
@@ -38,25 +38,34 @@ func New(apiConnection apiconnection.ApiConnection) Volumes {
     return images
 }
 
-func (vol *Volumes) List() []Volume {
+func (vol *Volumes) List() ([]Volume, error) {
     type VolumesNode struct {
         Volumes []Volume `json:"volumes"`
     }
     volumes := VolumesNode{}
-    json.Unmarshal(vol.apiConnection.Get("/volumes"), &volumes)
-    return volumes.Volumes
+    res, err := vol.apiConnection.Get("/volumes")
+    if err != nil {
+        return make([]Volume,0), err
+    }
+
+    json.Unmarshal(res, &volumes)
+    return volumes.Volumes, nil
 }
 
-func (s *Volumes) Get(id string) Volume {
+func (vol *Volumes) Get(id string) (Volume, error) {
     type VolumeNode struct {
         Volume Volume `json:"volume"`
     }
     volume := VolumeNode{}
-    json.Unmarshal(s.apiConnection.Get("/volumes/" + id), &volume)
-    return volume.Volume
+    res, err := vol.apiConnection.Get("/volumes/" + id)
+    if err != nil {
+        return Volume{}, err
+    }
+    json.Unmarshal(res, &volume)
+    return volume.Volume, nil
 }
 
-func (vol *Volumes) Create(name string, sizeInGB float64, options map[string]interface{}) Volume {
+func (vol *Volumes) Create(name string, sizeInGB float64, options map[string]interface{}) (Volume, error) {
     createRequest := make(map[string]interface{})
     volumeRequest := make(map[string]interface{})
 
@@ -71,11 +80,15 @@ func (vol *Volumes) Create(name string, sizeInGB float64, options map[string]int
     volume := VolumeNode{}
 
     req, _ := json.Marshal(createRequest)
-    json.Unmarshal(vol.apiConnection.Post("/volumes",string(req)), &volume)
-    return volume.Volume
+    res, err := vol.apiConnection.Post("/volumes", string(req))
+    if err != nil {
+        return Volume{}, err
+    }
+    json.Unmarshal(res, &volume)
+    return volume.Volume, nil
 }
 
-func (vol *Volumes) Attach(volumeId string, instanceId string, mountPoint string, options map[string]interface{}) {
+func (vol *Volumes) Attach(volumeId string, instanceId string, mountPoint string, options map[string]interface{}) error {
     action := make(map[string]interface{})
     attachAction := make(map[string]interface{})
 
@@ -92,17 +105,21 @@ func (vol *Volumes) Attach(volumeId string, instanceId string, mountPoint string
     action["os-attach"] = attachAction
 
     req, _ := json.Marshal(action)
-    fmt.Println(string(vol.apiConnection.Post("/volumes/" + volumeId + "/action",string(req))))
+    _, err := vol.apiConnection.Post("/volumes/" + volumeId + "/action", string(req))
+
+    return err
 }
 
-func (vol *Volumes) Detach(volumeId string) {
+func (vol *Volumes) Detach(volumeId string) error {
     action := make(map[string]interface{})
     action["os-detach"] = nil
 
     req, _ := json.Marshal(action)
-    fmt.Println(string(vol.apiConnection.Post("/volumes/" + volumeId + "/action",string(req))))
+    _, err := vol.apiConnection.Post("/volumes/" + volumeId + "/action", string(req))
+    return err
 }
 
-func (vol *Volumes) Delete(volumeId string) {
-    fmt.Println(string(vol.apiConnection.Delete("/volumes/" + volumeId )))
+func (vol *Volumes) Delete(volumeId string) error {
+    _, err := vol.apiConnection.Delete("/volumes/" + volumeId)
+    return err
 }

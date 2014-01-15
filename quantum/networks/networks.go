@@ -2,6 +2,7 @@ package networks
 
 import (
     _"fmt"
+    "errors"
     "encoding/json"
     "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
 )
@@ -26,13 +27,30 @@ func New(apiConnection apiconnection.ApiConnection) Networks {
     return networks
 }
 
-func (n *Networks) List() []Network {
+func (n *Networks) List() ([]Network, error) {
     type NetworksNode struct {
         Networks []Network `json:"networks"`
     }
     networks := NetworksNode{}
-    json.Unmarshal(n.apiConnection.Get("/v2.0/networks"), &networks)
-    return networks.Networks
+    res, err := n.apiConnection.Get("/v2.0/networks")
+    if err != nil {
+        return make([]Network,0), err
+    }
+    json.Unmarshal(res, &networks)
+    return networks.Networks, nil
+}
+
+func (n *Networks) GetByName(name string) (Network, error) {
+    networks, err := n.List()
+    if err != nil {
+        return Network{}, err
+    }
+    for _, network := range networks {
+        if network.Name == name {
+            return network, nil
+        }
+    }
+    return Network{}, errors.New("Network not found.")
 }
 
 //func (n *Networks) Get(id string) Network {

@@ -16,17 +16,24 @@ func New(apiConnection apiconnection.ApiConnection) Images {
     return images
 }
 
-func (s *Images) List() []Image {
+func (s *Images) List() ([]Image, error) {
     type ImagesNode struct {
         Images []Image `json:"images"`
     }
     images := ImagesNode{}
-    json.Unmarshal(s.apiConnection.Get("/images"), &images)
-    return images.Images
+    res, err := s.apiConnection.Get("/images")
+    if err != nil {
+        return make([]Image,0), err
+    }
+    json.Unmarshal(res, &images)
+    return images.Images, nil
 }
 
 func (s *Images) GetByName(name string) (Image, error) {
-    images := s.List()
+    images, err := s.List()
+    if err != nil {
+        return Image{}, err
+    }
     for _, image := range images {
         if image.Name == name {
             return image, nil

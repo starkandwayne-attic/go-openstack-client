@@ -16,17 +16,27 @@ func New(apiConnection apiconnection.ApiConnection) Flavors {
     return images
 }
 
-func (s *Flavors) List() []Flavor {
+func (s *Flavors) List() ([]Flavor, error) {
     type FlavorsNode struct {
         Flavors []Flavor `json:"flavors"`
     }
     flavors := FlavorsNode{}
-    json.Unmarshal(s.apiConnection.Get("/flavors"), &flavors)
-    return flavors.Flavors
+    res, err := s.apiConnection.Get("/flavors")
+
+    if err != nil {
+        return make([]Flavor,0), err
+    }
+
+    json.Unmarshal(res, &flavors)
+    return flavors.Flavors, nil
 }
 
 func (s *Flavors) GetByName(name string) (Flavor, error) {
-    flavors := s.List()
+    flavors, err := s.List()
+    if err != nil {
+        return Flavor{}, err
+    }
+
     for _, flavor := range flavors {
         if flavor.Name == name {
             return flavor, nil

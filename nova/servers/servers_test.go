@@ -23,19 +23,19 @@ func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
 }
 
 
-func (t *ServersTestSuite) xTest_List (c *gocheck.C) {
+func (t *ServersTestSuite) Test_List (c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
     fmt.Println(servers.List())
 }
 
 func (t *ServersTestSuite) xTest_Get (c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
-    s := servers.Get("1b2cfce2-c6e3-4368-8c61-d322ddc7412b")
+    s, _ := servers.Get("1b2cfce2-c6e3-4368-8c61-d322ddc7412b")
     fmt.Println(s)
     //fmt.Println(s.Addresses["demonet2"][0].Addr)
 }
 
-func (t *ServersTestSuite) Test_Create(c *gocheck.C) {
+func (t *ServersTestSuite) xTest_Create(c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
     images := images.New(t.ApiTestHarness.ApiConnection)
     flavors := flavors.New(t.ApiTestHarness.ApiConnection)
@@ -55,7 +55,8 @@ echo "cloud-user    ALL=(ALL)   NOPASSWD: ALL" >> /etc/sudoers`
     options["networks"] = networksList
 
     serverImage, _ := images.GetByName("centos")
-    servers.Create("jrbTestServer",serverImage,flavors.List()[1],options)
+    serverFlavor, _ := flavors.GetByName("m1.small")
+    servers.Create("jrbTestServer",serverImage,serverFlavor,options)
 }
 
 func (t *ServersTestSuite) xTest_Delete(c *gocheck.C) {

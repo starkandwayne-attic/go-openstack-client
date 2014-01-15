@@ -23,13 +23,13 @@ func (t *VolumesTestSuite) SetUpSuite (c *gocheck.C) {
 
 func (t *VolumesTestSuite) xTest_List (c *gocheck.C) {
     volumes := New(t.ApiTestHarness.ApiConnection)
-    volumeList := volumes.List()
+    volumeList, _ := volumes.List()
     fmt.Println(volumeList)
 }
 
 func (t *VolumesTestSuite) xTest_Get (c *gocheck.C) {
     volumes := New(t.ApiTestHarness.ApiConnection)
-    v := volumes.Get("56bd7e8b-eee3-4624-a31d-e0f22e3eabf0")
+    v, _ := volumes.Get("56bd7e8b-eee3-4624-a31d-e0f22e3eabf0")
     fmt.Println(v)
 }
 
@@ -37,17 +37,17 @@ func (t *VolumesTestSuite) xTest_Get (c *gocheck.C) {
 func (t *VolumesTestSuite) xTest_Create (c *gocheck.C) {
     volumes := New(t.ApiTestHarness.ApiConnection)
     options := make(map[string]interface{})
-    v := volumes.Create("jrbNewVolume",float64(20),options)
+    v, _ := volumes.Create("jrbNewVolume",float64(20),options)
     fmt.Println(v)
     fmt.Println(v.Id)
 }
 
-func (t *VolumesTestSuite) Test_Detach (c *gocheck.C) {
+func (t *VolumesTestSuite) xTest_Detach (c *gocheck.C) {
     volumes := New(t.ApiTestHarness.ApiConnection)
-    volumes.Detach("")
+    volumes.Detach("b3cf2b52-fa44-413a-93a3-d6f58c273b7b")
 }
 
-func (t *VolumesTestSuite) xTest_Delete (c *gocheck.C) {
+func (t *VolumesTestSuite) Test_Delete (c *gocheck.C) {
     volumes := New(t.ApiTestHarness.ApiConnection)
-    volumes.Delete("34e1763d-47a6-4802-b47f-b9f2be956a2f")
+    volumes.Delete("b3cf2b52-fa44-413a-93a3-d6f58c273b7b")
 }

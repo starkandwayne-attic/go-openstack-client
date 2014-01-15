@@ -46,20 +46,50 @@ func (ac *ApiConnection) Connect() {
     ac.novaHttpClient = client.New(adminCreds, ac.ApiConnectionUrl)
 }
 
-func (ac *ApiConnection) Get(endpointURL string) []byte {
-    res, _ := ac.novaHttpClient.Get(endpointURL)
-    resBody, _ := ioutil.ReadAll(res.Body)
-    return resBody
+func (ac *ApiConnection) Get(endpointURL string) ([]byte, error) {
+    res, httpErr := ac.novaHttpClient.Get(endpointURL)
+
+    if httpErr != nil {
+        return make([]byte,0), httpErr
+    }
+
+    resBody, readErr := ioutil.ReadAll(res.Body)
+
+    if readErr != nil {
+        return make([]byte,0), readErr
+    }
+
+    return resBody, nil
 }
 
-func (ac *ApiConnection) Post(endpointURL string, body string) []byte {
-    res, _ := ac.novaHttpClient.Post(endpointURL,body)
-    resBody, _ := ioutil.ReadAll(res.Body)
-    return resBody
+func (ac *ApiConnection) Post(endpointURL string, body string) ([]byte, error) {
+    res, httpErr := ac.novaHttpClient.Post(endpointURL,body)
+
+    if httpErr != nil {
+        return make([]byte,0), httpErr
+    }
+
+    resBody, readErr := ioutil.ReadAll(res.Body)
+
+    if readErr != nil {
+        return make([]byte,0), readErr
+    }
+
+    return resBody, nil
 }
 
-func (ac *ApiConnection) Delete(endpointURL string) []byte {
-    res, _ := ac.novaHttpClient.Delete(endpointURL)
-    resBody, _ := ioutil.ReadAll(res.Body)
-    return resBody
+func (ac *ApiConnection) Delete(endpointURL string) ([]byte, error) {
+    res, httpErr := ac.novaHttpClient.Delete(endpointURL)
+
+    if httpErr != nil {
+        return make([]byte,0), httpErr
+    }
+
+    resBody, readErr := ioutil.ReadAll(res.Body)
+
+    if readErr != nil {
+        return make([]byte,0), readErr
+    }
+
+    return resBody, nil
 }
