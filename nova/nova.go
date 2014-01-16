@@ -1,26 +1,29 @@
 package nova
 
 import (
-    "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
-    "git.smf.sh/jrbudnack/go_openstack_client/nova/images"
-    "git.smf.sh/jrbudnack/go_openstack_client/nova/flavors"
-    "git.smf.sh/jrbudnack/go_openstack_client/nova/servers"
+	"git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
+	"git.smf.sh/jrbudnack/go_openstack_client/nova/flavors"
+	"git.smf.sh/jrbudnack/go_openstack_client/nova/floating_ips"
+	"git.smf.sh/jrbudnack/go_openstack_client/nova/images"
+	"git.smf.sh/jrbudnack/go_openstack_client/nova/servers"
 )
 
 type Nova struct {
-    ApiConnection apiconnection.ApiConnection
-    Images images.Images
-    Flavors flavors.Flavors
-    Servers servers.Servers
+	ApiConnection apiconnection.ApiConnection
+	Images        images.Images
+	Flavors       flavors.Flavors
+	Servers       servers.Servers
+	FloatingIps   floating_ips.FloatingIps
 }
 
 func New(adminurl string, username string, password string, tenantname string) Nova {
-    n := Nova{}
-    n.ApiConnection = apiconnection.New(adminurl,"compute",username,password,tenantname)
-    n.Images = images.New(n.ApiConnection)
-    n.Flavors = flavors.New(n.ApiConnection)
-    n.Servers = servers.New(n.ApiConnection)
-    return n
+	n := Nova{}
+	n.ApiConnection = apiconnection.New(adminurl, "compute", username, password, tenantname)
+	n.Images = images.New(n.ApiConnection)
+	n.Flavors = flavors.New(n.ApiConnection)
+	n.Servers = servers.New(n.ApiConnection)
+	n.FloatingIps = floating_ips.New(n.ApiConnection)
+	return n
 }
 
 //Example:
