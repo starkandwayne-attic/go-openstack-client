@@ -4,9 +4,9 @@ import (
     "fmt"
     "encoding/base64"
     "encoding/json"
-    "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
-    "git.smf.sh/jrbudnack/go_openstack_client/nova/flavors"
-    "git.smf.sh/jrbudnack/go_openstack_client/nova/images"
+    "github.com/starkandwayne/go-openstack-client/apiconnection"
+    "github.com/starkandwayne/go-openstack-client/nova/flavors"
+    "github.com/starkandwayne/go-openstack-client/nova/images"
 )
 
 type Servers struct {

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	_ "fmt"
-	"git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
+	"github.com/starkandwayne/go-openstack-client/apiconnection"
 	"strconv"
 )
 

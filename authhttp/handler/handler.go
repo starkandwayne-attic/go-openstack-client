@@ -2,7 +2,7 @@ package handler
 
 import (
   _"fmt"
-  "git.smf.sh/jrbudnack/go_openstack_client/authhttp/authenticator"
+  "github.com/starkandwayne/go-openstack-client/authhttp/authenticator"
   "net/http"
 )
 

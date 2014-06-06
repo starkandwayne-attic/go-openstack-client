@@ -1,11 +1,11 @@
 package nova
 
 import (
-	"git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
-	"git.smf.sh/jrbudnack/go_openstack_client/nova/flavors"
-	"git.smf.sh/jrbudnack/go_openstack_client/nova/floating_ips"
-	"git.smf.sh/jrbudnack/go_openstack_client/nova/images"
-	"git.smf.sh/jrbudnack/go_openstack_client/nova/servers"
+	"github.com/starkandwayne/go-openstack-client/apiconnection"
+	"github.com/starkandwayne/go-openstack-client/nova/flavors"
+	"github.com/starkandwayne/go-openstack-client/nova/floating_ips"
+	"github.com/starkandwayne/go-openstack-client/nova/images"
+	"github.com/starkandwayne/go-openstack-client/nova/servers"
 )
 
 type Nova struct {

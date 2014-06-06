@@ -1,8 +1,8 @@
 package cinder
 
 import (
-    "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
-    "git.smf.sh/jrbudnack/go_openstack_client/cinder/volumes"
+    "github.com/starkandwayne/go-openstack-client/apiconnection"
+    "github.com/starkandwayne/go-openstack-client/cinder/volumes"
 )
 
 type Cinder struct {

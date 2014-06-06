@@ -5,8 +5,8 @@ import (
     "encoding/json"
     "io/ioutil"
     "net/http"
-    "git.smf.sh/jrbudnack/go_openstack_client/servicecatalog"
-    "git.smf.sh/jrbudnack/go_openstack_client/util"
+    "github.com/starkandwayne/go-openstack-client/servicecatalog"
+    "github.com/starkandwayne/go-openstack-client/util"
 )
 
 type AuthResponse struct {

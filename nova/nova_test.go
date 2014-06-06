@@ -2,9 +2,9 @@ package nova
 
 import (
 	"fmt"
-	"git.smf.sh/jrbudnack/go_openstack_client/apitestharness"
-	"git.smf.sh/jrbudnack/go_openstack_client/cinder"
-	"git.smf.sh/jrbudnack/go_openstack_client/quantum"
+	"github.com/starkandwayne/go-openstack-client/apitestharness"
+	"github.com/starkandwayne/go-openstack-client/cinder"
+	"github.com/starkandwayne/go-openstack-client/quantum"
 	"launchpad.net/gocheck"
 	"testing"
 )

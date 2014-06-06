@@ -1,8 +1,8 @@
 package quantum
 
 import (
-    "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
-    "git.smf.sh/jrbudnack/go_openstack_client/quantum/networks"
+    "github.com/starkandwayne/go-openstack-client/apiconnection"
+    "github.com/starkandwayne/go-openstack-client/quantum/networks"
 )
 
 type Quantum struct {

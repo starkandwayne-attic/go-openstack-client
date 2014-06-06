@@ -3,10 +3,10 @@ package apitestharness
 import (
     _"fmt"
     "os"
-    "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
-    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/authenticator"
-    "git.smf.sh/jrbudnack/go_openstack_client/authhttp/none"
-    "git.smf.sh/jrbudnack/go_openstack_client/testserver"
+    "github.com/starkandwayne/go-openstack-client/apiconnection"
+    "github.com/starkandwayne/go-openstack-client/authhttp/authenticator"
+    "github.com/starkandwayne/go-openstack-client/authhttp/none"
+    "github.com/starkandwayne/go-openstack-client/testserver"
 )
 
 type ApiTestHarness struct{

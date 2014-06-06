@@ -2,7 +2,7 @@ package flavors
 
 import (
     "fmt"
-    "git.smf.sh/jrbudnack/go_openstack_client/apitestharness"
+    "github.com/starkandwayne/go-openstack-client/apitestharness"
     "launchpad.net/gocheck"
     "testing"
 )

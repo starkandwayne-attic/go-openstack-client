@@ -3,7 +3,7 @@ package volumes
 import (
     _"fmt"
     "encoding/json"
-    "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
+    "github.com/starkandwayne/go-openstack-client/apiconnection"
 )
 
 type Volumes struct {

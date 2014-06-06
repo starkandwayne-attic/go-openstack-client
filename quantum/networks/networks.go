@@ -4,7 +4,7 @@ import (
     _"fmt"
     "errors"
     "encoding/json"
-    "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
+    "github.com/starkandwayne/go-openstack-client/apiconnection"
 )
 
 type Networks struct {
