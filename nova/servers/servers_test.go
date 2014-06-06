@@ -23,7 +23,7 @@ func (t *ServersTestSuite) SetUpSuite (c *gocheck.C) {
 }
 
 
-func (t *ServersTestSuite) Test_List (c *gocheck.C) {
+func (t *ServersTestSuite) xTest_List (c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
     fmt.Println(servers.List())
 }
@@ -35,24 +35,25 @@ func (t *ServersTestSuite) xTest_Get (c *gocheck.C) {
     //fmt.Println(s.Addresses["demonet2"][0].Addr)
 }
 
-func (t *ServersTestSuite) xTest_Create(c *gocheck.C) {
+func (t *ServersTestSuite) Test_Create(c *gocheck.C) {
     servers := New(t.ApiTestHarness.ApiConnection)
     images := images.New(t.ApiTestHarness.ApiConnection)
     flavors := flavors.New(t.ApiTestHarness.ApiConnection)
     options := make(map[string]interface{})
-    privateNet := make(map[string]string)
+    //privateNet := make(map[string]string)
 
     options["keyname"] = "bosh"
     options["userdata"] =
 `#!/bin/bash
 echo "cloud-user    ALL=(ALL)   NOPASSWD: ALL" >> /etc/sudoers`
 
-    privateNet["uuid"] = "0503030a-9ab9-4807-a7a7-10c06018f3d8"
+    //privateNet["uuid"] = "0503030a-9ab9-4807-a7a7-10c06018f3d8"
 
-    networksList := make([]map[string]string,0)
-    networksList = append(networksList, privateNet)
+    //networksList := make([]map[string]string,0)
+    //networksList = append(networksList, privateNet)
 
-    options["networks"] = networksList
+    //options["networks"] = networksList
+    options["security_groups"] = []SecurityGroup{SecurityGroup{"bosh"}}
 
     serverImage, _ := images.GetByName("centos")
     serverFlavor, _ := flavors.GetByName("m1.small")

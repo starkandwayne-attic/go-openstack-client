@@ -1,7 +1,7 @@
 package servers
 
 import (
-    _"fmt"
+    "fmt"
     "encoding/base64"
     "encoding/json"
     "git.smf.sh/jrbudnack/go_openstack_client/apiconnection"
@@ -65,6 +65,12 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
         serverRequest["user_data"] = encodedUserData
     }
 
+    _, hasSecurityGroups := options["security_groups"]
+
+    if hasSecurityGroups{
+        serverRequest["security_groups"] = options["security_groups"]
+    }
+
     _, hasNetworks := options["networks"]
 
     if hasNetworks {
@@ -80,6 +86,7 @@ func (s *Servers) Create(name string, image images.Image, flavor flavors.Flavor,
     req, _ := json.Marshal(createRequest)
     res, err := s.apiConnection.Post("/servers", string(req))
     if err != nil {
+        fmt.Println(err)
         return Server{}, err
     }
 
