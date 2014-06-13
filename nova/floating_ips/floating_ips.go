@@ -40,6 +40,7 @@ func (s *FloatingIps) Create() (FloatingIp, error) {
 		return FloatingIp{}, err
 	}
 	json.Unmarshal(res, &floatingIpNode)
+    println(floatingIpNode.FloatingIp.Ip)
 	return floatingIpNode.FloatingIp, err
 }
 
@@ -52,7 +53,7 @@ func (s *FloatingIps) Delete(id int) error {
 	return nil
 }
 
-func (s *FloatingIps) GetById(id int) (FloatingIp, error) {
+func (s *FloatingIps) GetById(id string) (FloatingIp, error) {
 	floatingIps, err := s.List()
 	if err != nil {
 		return FloatingIp{}, err
@@ -77,7 +78,7 @@ func (s *FloatingIps) CreateAndAttachToServer(serverId string) error {
 	return nil
 }
 
-func (s *FloatingIps) AttachToServer(serverId string, floatingIpId int) error {
+func (s *FloatingIps) AttachToServer(serverId string, floatingIpId string) error {
 	serverEndpoint := "/servers/" + serverId + "/action"
 	addIpRequest := make(map[string]interface{})
 	address := make(map[string]string)
@@ -96,7 +97,7 @@ func (s *FloatingIps) AttachToServer(serverId string, floatingIpId int) error {
 }
 
 type FloatingIp struct {
-	Id         int    `json:"id"`
+	Id         string    `json:"id"`
 	InstanceId string `json:"instance_id"`
 	Ip         string `json:"ip"`
 	Pool       string `json:"pool"`
